@@ -13,14 +13,21 @@ class Warga extends Model
     protected $table = 'warga';
     protected $fillable = [
         'id_rt',
-        'nama',
+        'id_user',
         'nik',
         'alamat',
         'no_hp',
         'foto',
         'jml_anggota_keluarga',
-        'email',
         'no_kk',
-        'password',
     ];
+
+    public function user(){
+        return $this->hasOne(User::class, 'id', 'id_user');
+    }
+
+    public function detailRt()
+    {
+        return $this->belongsTo(RT::class, 'id_rt', 'id');
+    }
 }

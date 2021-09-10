@@ -5,19 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Admin_RT extends Model
+class AdminRT extends Model
 {
     use HasFactory;
     protected $table = 'admin_rt';
     public $timestamps = false;
     protected $fillable = [
         'id_rt',
+        'id_user',
         'nik',
-        'nama',
-        'email',
         'no_hp',
         'alamat',
-        'password',
         'jabatan'
     ];
+
+    public function detailRt()
+    {
+        return $this->belongsTo(RT::class, 'id_rt', 'id');
+    }
+
+    public function user(){
+        return $this->hasOne(User::class, 'id', 'id_user');
+    }
 }

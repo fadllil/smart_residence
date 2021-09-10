@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Administrator extends Model
+class KegiatanDetailIuran extends Model
 {
     use HasFactory;
-    protected $table = 'administrator';
-    public $timestamps = false;
+    protected $table = 'kegiatan_detail_iuran';
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'nama',
-        'password',
-        'email',
-        'no_hp'
+        'id_iuran',
+        'id_user',
+        'status'
     ];
 }

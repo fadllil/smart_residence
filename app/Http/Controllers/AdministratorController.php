@@ -3,68 +3,53 @@
 namespace App\Http\Controllers;
 
 use App\Models\Administrator;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Testing\Fluent\Concerns\Has;
 
 class AdministratorController extends Controller
 {
     public function __construct()
     {
+
     }
 
-    public function getAuth(Request $request){
-        $auth = $request->session()->get('auth');
-        return $auth;
+    public function index(){
+        $role = Auth::user()->role;
+        $list_data = User::where('role', $role)->get();
+        return view('administrator.user.admin', compact('list_data'));
     }
 
-    public function user(Request $request){
-        if ($request->session()->has('auth')){
-            $auth = $this->getAuth($request);
-            $nama = $auth['nama'];
-            $list_data = Administrator::all();
-            return view('administrator.admin.user', compact('list_data', 'nama'));
-        }else{
-            return view('login');
+    public function create(Request $request){
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8',
+            'role' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->with('warning', $validator->errors()->first());
         }
+
+        $data = $request->all();
+        $data['password'] = Hash::make($request->password);
+        unset($data['_token']);
+        User::create($data);
+        return redirect()->back()->with('succes','Berhasil Menambah Data Admin');
     }
 
-    public function formTambah(Request $request){
-        $auth = $this->getAuth($request);
-        $nama = $auth['nama'];
-        return view('administrator.admin.tambah', compact('nama'));
+    public function update($id, Request $request){
+        unset($request['_token']);
+        User::where('id', $id)->update($request->all());
+        return redirect()->back()->with('succes','Berhasil Mengubah Data Admin');
     }
 
-    public function tambah(Request $request){
-        $data = new Administrator();
-        $data->nama = $request->nama;
-        $data->password = Hash::make($request->password);
-        $data->email = $request->email;
-        $data->no_hp = $request->no_hp;
-        $data->save();
-        return redirect('admin/user')->with('succes','Berhasil Menambah Data administrator');
-    }
-
-    public function formEdit(Request $request, $id){
-        $auth = $this->getAuth($request);
-        $nama = $auth['nama'];
-        $data = Administrator::where('id', $id)->first();
-        return view('administrator.admin.edit', compact('nama', 'data'));
-    }
-
-    public function edit($id, Request $request){
-        $data = Administrator::where('id', $id)->first();
-        $data->nama = $request->nama;
-        $data->email = $request->email;
-        $data->no_hp = $request->no_hp;
-        $data->update();
-        return redirect('admin/user')->with('succes','Berhasil Mengubah Data administrator');
-    }
-
-    public function hapus($id){
-        $data = Administrator::FindOrFail($id);
-        $data->delete();
-        return redirect('admin/user')->with('succes','Berhasil Menghapus Data administrator');
+    public function delete($id){
+        User::FindOrFail($id)->delete();
+        return redirect()->back()->with('succes','Berhasil Menghapus Data Admin');
     }
 }

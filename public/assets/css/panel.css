@@ -26592,6 +26592,7 @@ body.trumbowyg-body-fullscreen {
   box-sizing: border-box;
   cursor: pointer;
   display: block;
+    min-height: 3rem;
   height: 28px;
   user-select: none;
   -webkit-user-select: none;

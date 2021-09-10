@@ -64,21 +64,16 @@
             </div>
             <ul class="sidebar-menu">
                 <li class="treeview "><a href="/">
-                        <i class="icon icon-sailing-boat-water text-blue"></i><span>Dashboard</span>
+                        <i class="icon icon-package text-blue"></i><span>Dashboard</span>
                     </a>
                 </li>
-                <li class="treeview "><a href="#">
-                        <i class="icon icon-package text-blue"></i><span>Manajemen Pengguna</span>
-                        <i class="icon icon-angle-left pull-right"></i>
+                <li class="treeview "><a href="/rt/warga/">
+                        <i class="icon icon-package text-blue"></i><span>Manajemen Warga</span>
                     </a>
-                    <ul class="treeview-menu">
-                        <li><a href="admin"><i class="icon icon-circle-o"></i>Admin</a>
-                        </li>
-                        <li><a href="adminrt"><i class="icon icon-circle-o"></i>RT</a>
-                        </li>
-                        <li><a href="/warga"><i class="icon icon-circle-o"></i>Warga</a>
-                        </li>
-                    </ul>
+                </li>
+                <li class="treeview "><a href="/rt/kegiatan/">
+                        <i class="icon icon-package text-blue"></i><span>Kegiatan</span>
+                    </a>
                 </li>
                 <li class="treeview "><a href="#">
                         <i class="icon icon-package text-blue"></i><span>Data Master</span>

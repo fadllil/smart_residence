@@ -55,19 +55,26 @@
                         <p class="s-18 p-t-b-20 font-weight-lighter">Silahkan masukkan email dan password
                         anda</p>
                     </div>
+                    @if($message = Session::get('warning'))
+                        <div class="alert alert-warning alert-dismissible" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+                            </button>
+                            <strong>Warning!</strong> {{$message}}
+                        </div>
+                    @endif
                     <form method="POST" action="{{route('doLogin')}}">
                         @csrf
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group has-icon"><i class="icon-envelope-o"></i>
                                     <input name="email" type="text" class="form-control form-control-lg no-b"
-                                           placeholder="Email Address">
+                                           placeholder="Email Address" required>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group has-icon"><i class="icon-user-secret"></i>
                                     <input name="password" type="password" class="form-control form-control-lg no-b"
-                                           placeholder="Password">
+                                           placeholder="Password" required>
                                 </div>
                             </div>
                             <div class="col-lg-12">
