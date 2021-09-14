@@ -15,4 +15,8 @@ class KegiatanDetailIuran extends Model
         'id_user',
         'status'
     ];
+
+    public function user(){
+        return $this->hasOne(User::class, 'id', 'id_user');
+    }
 }

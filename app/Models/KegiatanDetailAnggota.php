@@ -16,4 +16,12 @@ class KegiatanDetailAnggota extends Model
         'nama_didaftarkan',
         'keterangan'
     ];
+
+    public function kegiatanAnggota(){
+        return $this->hasOne(KegiatanAnggota::class, 'id', 'id_kegiatan_anggota');
+    }
+
+    public function user(){
+        return $this->hasOne(User::class, 'id', 'id_user');
+    }
 }

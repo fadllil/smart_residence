@@ -18,6 +18,6 @@ class KegiatanIuran extends Model
 
     public function detailIuran()
     {
-        return $this->hasMany(KegiatanDetailIuran::class, 'id', 'id_iuran');
+        return $this->hasMany(KegiatanDetailIuran::class, 'id_iuran', 'id');
     }
 }

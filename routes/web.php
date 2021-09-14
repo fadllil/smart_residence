@@ -125,6 +125,18 @@ Route::group(['prefix' => 'rt', 'middleware' => 'web.auth'], function () {
         Route::get('/delete/{id}', [RtKegiatan::class, 'delete']);
         Route::get('/selesai/{id}', [RtKegiatan::class, 'selesai']);
         Route::get('/batal/{id}', [RtKegiatan::class, 'batal']);
-        Route::get('/pengurus/{id}', [RtDetailKegiatan::class, 'detailPengurus']);
+
+        Route::group(['prefix' => 'detail-anggota'], function () {
+            Route::get('/{id}', [RtDetailKegiatan::class, 'detailAnggota']);
+            Route::get('/delete/{id}', [RtDetailKegiatan::class, 'deleteAnggota']);
+            Route::get('/datatable/{id}', [RtDetailKegiatan::class, 'datatableAnggota']);
+            Route::post('/create', [RtDetailKegiatan::class, 'createAnggota']);
+            Route::post('/update/{id}', [RtDetailKegiatan::class, 'updateAnggota']);
+        });
+
+        Route::group(['prefix' => 'detail-iuran'], function () {
+            Route::get('/{id}', [RtDetailKegiatan::class, 'detailIuran']);
+            Route::get('/datatable/{id}', [RtDetailKegiatan::class, 'datatableIuran']);
+        });
     });
 });

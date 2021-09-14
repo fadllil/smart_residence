@@ -9,16 +9,58 @@
                 </h4>
             </div>
         </div>
-        <div class="row ">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-primary s-12" data-toggle="modal" data-target="#tambah">
-                        <i class="icon-plus"></i> <span>Tambah</span>
-                    </a>
-                </li>
-            </ul>
+    </div>
+@endsection
+
+@section('content')
+    <!-- Main content -->
+    <div class="content-wrapper animatedParent animateOnce">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+
+                    <div class="card">
+                        <!-- /.card-header -->
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-10">
+                                    <h6 class="card-title">Tabel Data Kegiatan</h6>
+                                </div>
+                                <div class="col-2 text-right">
+                                    <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#tambah">
+                                        <i class="icon icon-add"> Tambah</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="datatableKegiatan" class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Kegiatan</th>
+                                    <th>Tanggal Mulai</th>
+                                    <th>Tanggal Selesai</th>
+                                    <th>Lokasi</th>
+                                    <th>Status</th>
+                                    <th>Catatan</th>
+                                    <th style="width: 180px">Aksi</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
         </div>
     </div>
+    <!-- /.content -->
 
     <!-- Modal -->
     <div class="modal fade" id="tambah"
@@ -120,45 +162,6 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('content')
-    <!-- Main content -->
-    <div class="content-wrapper animatedParent animateOnce">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-
-                    <div class="card">
-                        <!-- /.card-header -->
-                        <div class="card-body">
-                            <table id="datatableKegiatan" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kegiatan</th>
-                                    <th>Tanggal Mulai</th>
-                                    <th>Tanggal Selesai</th>
-                                    <th>Lokasi</th>
-                                    <th>Status</th>
-                                    <th>Catatan</th>
-                                    <th style="width: 180px">Aksi</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
-                </div>
-                <!-- /.col -->
-            </div>
-            <!-- /.row -->
-        </div>
-    </div>
-    <!-- /.content -->
 
     @foreach($data as $d)
         <div class="modal fade" id="edit{{$d->id}}"
@@ -222,6 +225,7 @@
         </div>
     @endforeach
 
+
 @endsection
 
 @section('script')
@@ -238,10 +242,10 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="iuran">Jenis Anggota</label>
-                        <select class="form-control"  id="status_anggota" name="status_anggota" required>
+                        <select class="form-control" onchange="pengurus(this)"  id="status_anggota" name="status_anggota" required>
                             <option selected disabled>Pilih Jenis Anggota</option>
                             <option value="Pengurus">Pengurus</option>
-                            <option value="Pendaftaran">Pendaftaran</option>
+                            <option value="Peserta">Peserta</option>
                         </select>
                     </div>
                 </div>
@@ -256,7 +260,6 @@
              `);
             $("#tambah-detail").hide();
             $("#hapus-detail").show();
-            $("#detail-anggota").show();
         }
 
         function hapusDetail() {
@@ -271,16 +274,38 @@
             $("#hapus-detail").hide();
         }
 
+        function pengurus(data){
+
+            if (data.value == "Pengurus") {
+                $("#detail-anggota").show();
+            }else{
+                $("#detail-anggota").hide();
+                $("#hapus-detail-anggota").hide();
+                i--;
+                for (i ; i >= 0; i--){
+                    $(`#anggota-${i}`).remove();
+                }
+                i = 0;
+
+            }
+        }
+
+
         function generateAnggota() {
             $('.detail-anggota').append(`<div id="anggota-${i}" class="col-4" >
-        <div class="form-group">
-            <label>Nama</label>
-            <input type="text" name="nama_anggota[]" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label>Jabatan</label>
-            <input type="text" name="jabatan[]" class="form-control" required>
-        </div></div>`);
+                <div class="form-group">
+                    <label for="iuran">Jenis Anggota</label>
+                    <select class="form-control"  id="nama_anggota" name="id_user[]" required>
+                        <option selected disabled>Pilih Anggota</option>
+                        @foreach($warga as $w)
+                        <option value="{{$w->user->id}}">{{$w->user->nama}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Keterangan</label>
+                    <input type="text" name="keterangan[]" class="form-control" placeholder="Keterangan" required>
+                </div></div>`);
             i++;
             $("#hapus-detail-anggota").show();
         }

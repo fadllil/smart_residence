@@ -15,4 +15,12 @@ class KegiatanAnggota extends Model
         'status',
         'maksimal_anggota'
     ];
+
+    public function kegiatan(){
+        return $this->hasOne(Kegiatan::class, 'id', 'id_kegiatan');
+    }
+
+    public function detailAnggota(){
+        return $this->hasMany(KegiatanDetailAnggota::class, 'id_kegiatan_anggota', 'id');
+    }
 }
