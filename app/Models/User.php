@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'status'
     ];
 
     /**
@@ -39,4 +40,12 @@ class User extends Authenticatable
      *
      * @var array
      */
+
+    public function adminRt(){
+        return $this->hasOne(AdminRT::class, 'id_user', 'id');
+    }
+
+    public function warga(){
+        return $this->hasOne(Warga::class, 'id_user', 'id');
+    }
 }

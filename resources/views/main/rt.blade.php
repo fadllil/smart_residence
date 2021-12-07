@@ -63,34 +63,61 @@
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li class="treeview "><a href="/">
+                <li class="treeview {{
+                Request::is ('/') ? 'active' : ''
+                }}"><a href="/">
                         <i class="icon icon-package text-blue"></i><span>Dashboard</span>
                     </a>
                 </li>
-                <li class="treeview "><a href="/rt/warga/">
+                <li class="treeview {{
+                Request::is ('rt/warga') ? 'active' : ''
+                }}"><a href="/rt/warga/">
                         <i class="icon icon-package text-blue"></i><span>Manajemen Warga</span>
                     </a>
                 </li>
-                <li class="treeview "><a href="/rt/kegiatan/">
+                <li class="treeview {{
+                Request::is ('rt/kegiatan') ? 'active' : ''
+                }}"><a href="/rt/kegiatan/">
                         <i class="icon icon-package text-blue"></i><span>Kegiatan</span>
                     </a>
                 </li>
-                <li class="treeview "><a href="#">
-                        <i class="icon icon-package text-blue"></i><span>Data Master</span>
+                <li class="treeview {{
+                Request::is ('rt/informasi') ? 'active' : ''
+                }}"><a href="/rt/informasi/">
+                        <i class="icon icon-package text-blue"></i><span>Informasi</span>
+                    </a>
+                </li>
+                <li class="treeview {{
+                Request::is ('rt/pelaporan') ? 'active' : ''
+                }}"><a href="/rt/pelaporan/">
+                        <i class="icon icon-package text-blue"></i><span>Pelaporan</span>
+                    </a>
+                </li>
+                <li class="treeview
+                    @if(Request::is('rt/surat/pengantar')) active @endif
+                    @if(Request::is('rt/surat/keterangan')) active @endif
+                    "><a href="#">
+                        <i class="icon icon-package text-blue"></i><span>Surat</span>
                         <i class="icon icon-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="provinsi"><i class="icon icon-circle-o"></i> Provinsi</a>
+                        <li><a href="/rt/surat/pengantar"><i class="icon icon-circle-o"></i>Surat Pengantar</a>
                         </li>
-                        <li><a href="kab_kota"><i class="icon icon-circle-o"></i> Kab/Kota</a>
+                        <li><a href="/rt/surat/keterangan"><i class="icon icon-circle-o"></i>Surat Keterangan</a>
                         </li>
-                        <li><a href="kecamatan"><i class="icon icon-circle-o"></i> Kecamatan</a>
+                    </ul>
+                </li>
+                <li class="treeview
+                @if(Request::is('rt/keuangan/pengeluaran')) active @endif
+                @if(Request::is('rt/keuangan/pemasukan')) active @endif
+                "><a href="#">
+                        <i class="icon icon-package text-blue"></i><span>Keuangan</span>
+                        <i class="icon icon-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="/rt/keuangan/pemasukan"><i class="icon icon-circle-o"></i>Pemasukan</a>
                         </li>
-                        <li><a href="kelurahan"><i class="icon icon-circle-o"></i> Kelurahan</a>
-                        </li>
-                        <li><a href="rw"><i class="icon icon-circle-o"></i> Rukun Warga (RW)</a>
-                        </li>
-                        <li><a href="rt"><i class="icon icon-circle-o"></i> Rukun Tetangga (RT)</a>
+                        <li><a href="/rt/keuangan/pengeluaran"><i class="icon icon-circle-o"></i>Pengeluaran</a>
                         </li>
                     </ul>
                 </li>

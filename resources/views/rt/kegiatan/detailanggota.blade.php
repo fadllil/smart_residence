@@ -21,7 +21,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-
+                    @if($data['status'] == 'Peserta')
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-title">Maksimal Peserta : {{$data['maksimal_anggota']}}</p>
+                            </div>
+                        </div>
+                        <br>
+                    @endif
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-header">
@@ -29,11 +36,13 @@
                                 <div class="col-10">
                                     <h6 class="card-title">Tabel Data {{$data['status']}}</h6>
                                 </div>
-                                <div class="col-2 text-right">
-                                    <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#tambah">
-                                        <i class="icon icon-add"> Tambah</i>
-                                    </button>
-                                </div>
+                                @if($data->kegiatan->status == 'Belum Selesai')
+                                    <div class="col-2 text-right">
+                                        <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#tambah">
+                                            <i class="icon icon-add"> Tambah</i>
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="card-body">
@@ -48,7 +57,9 @@
                                         <th>Nama</th>
                                     @endif
                                     <th>Keterangan</th>
-                                    <th style="width: 180px">Aksi</th>
+                                    @if($data->kegiatan->status == 'Belum Selesai')
+                                        <th style="width: 180px">Aksi</th>
+                                    @endif
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -201,10 +212,12 @@
                         data: 'keterangan',
                         name: 'keterangan'
                     },
-                    {
-                        data: 'action',
-                        name: 'action'
-                    },
+                    @if($data->kegiatan->status == 'Belum Selesai')
+                        {
+                            data: 'action',
+                            name: 'action'
+                        },
+                    @endif
                 ]
             });
         });

@@ -17,6 +17,7 @@ class Kegiatan extends Model
         'tgl_selesai',
         'lokasi',
         'status',
+        'gambar',
         'catatan'
     ];
 

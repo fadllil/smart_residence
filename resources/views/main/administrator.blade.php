@@ -72,9 +72,9 @@
                         <i class="icon icon-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="admin"><i class="icon icon-circle-o"></i>Admin</a>
+                        <li><a href="/admin"><i class="icon icon-circle-o"></i>Admin</a>
                         </li>
-                        <li><a href="adminrt"><i class="icon icon-circle-o"></i>RT</a>
+                        <li><a href="/adminrt"><i class="icon icon-circle-o"></i>RT</a>
                         </li>
                         <li><a href="/warga"><i class="icon icon-circle-o"></i>Warga</a>
                         </li>
@@ -85,17 +85,17 @@
                         <i class="icon icon-angle-left pull-right"></i>
                     </a>
                     <ul class="treeview-menu">
-                        <li><a href="provinsi"><i class="icon icon-circle-o"></i> Provinsi</a>
+                        <li><a href="/provinsi"><i class="icon icon-circle-o"></i> Provinsi</a>
                         </li>
-                        <li><a href="kab_kota"><i class="icon icon-circle-o"></i> Kab/Kota</a>
+                        <li><a href="/kab_kota"><i class="icon icon-circle-o"></i> Kab/Kota</a>
                         </li>
-                        <li><a href="kecamatan"><i class="icon icon-circle-o"></i> Kecamatan</a>
+                        <li><a href="/kecamatan"><i class="icon icon-circle-o"></i> Kecamatan</a>
                         </li>
-                        <li><a href="kelurahan"><i class="icon icon-circle-o"></i> Kelurahan</a>
+                        <li><a href="/kelurahan"><i class="icon icon-circle-o"></i> Kelurahan</a>
                         </li>
-                        <li><a href="rw"><i class="icon icon-circle-o"></i> Rukun Warga (RW)</a>
+                        <li><a href="/rw"><i class="icon icon-circle-o"></i> Rukun Warga (RW)</a>
                         </li>
-                        <li><a href="rt"><i class="icon icon-circle-o"></i> Rukun Tetangga (RT)</a>
+                        <li><a href="/rt"><i class="icon icon-circle-o"></i> Rukun Tetangga (RT)</a>
                         </li>
                     </ul>
                 </li>

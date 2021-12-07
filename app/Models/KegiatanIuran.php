@@ -13,11 +13,22 @@ class KegiatanIuran extends Model
     protected $fillable = [
         'id_kegiatan',
         'status',
-        'nominal'
+        'nominal',
+        'tgl_terakhir_pembayaran'
     ];
 
     public function detailIuran()
     {
         return $this->hasMany(KegiatanDetailIuran::class, 'id_iuran', 'id');
+    }
+
+    public function getIuran()
+    {
+        return $this->hasOne(KegiatanDetailIuran::class, 'id_iuran', 'id');
+    }
+
+    public function Kegiatan()
+    {
+        return $this->hasOne(Kegiatan::class, 'id', 'id_kegiatan');
     }
 }

@@ -59,7 +59,7 @@ class AuthController extends Controller
             $res['results'] = $validator->errors()->first();
             return response()->json($res, $res['code']);
         }
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->with('adminRt', 'warga')->first();
         if (!$user){
             $res['results'] = 'Username not found';
             return response()->json($res, $res['code']);

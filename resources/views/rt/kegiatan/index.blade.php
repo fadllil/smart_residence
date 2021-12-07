@@ -13,54 +13,164 @@
 @endsection
 
 @section('content')
-    <!-- Main content -->
-    <div class="content-wrapper animatedParent animateOnce">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
+    <div class="custom-tab-1">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link <?php if (Session::get('menu') != 'proses' && Session::get('menu') != 'selesai') { ?>
+                    active
+                    <?php } ?>"
+                   data-toggle="tab" href="#belum-terlaksana"><i class="icon icon-agenda"></i> Belum Terlaksana</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php if (Session::get('menu') == 'proses') { ?>
+                    active
+                    <?php } ?>"
+                   data-toggle="tab" href="#selesai"><i class="icon icon-check"></i>
+                    Selesai</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?php if (Session::get('menu') == 'proses') { ?>
+                    active
+                    <?php } ?>"
+                   data-toggle="tab" href="#batal"><i class="icon icon-close"></i>
+                    Batal</a>
+            </li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="belum-terlaksana" role="tabpanel">
+                <!-- Main content -->
+                <div class="content-wrapper animatedParent animateOnce">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
 
-                    <div class="card">
-                        <!-- /.card-header -->
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-10">
-                                    <h6 class="card-title">Tabel Data Kegiatan</h6>
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-header">
+                                        <div class="row">
+                                            <div class="col-10">
+                                                <h6 class="card-title">Tabel Data Kegiatan</h6>
+                                            </div>
+                                            <div class="col-2 text-right">
+                                                <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#tambah">
+                                                    <i class="icon icon-add"> Tambah</i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="datatableKegiatan" class="table table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Kegiatan</th>
+                                                <th>Tanggal Mulai</th>
+                                                <th>Tanggal Selesai</th>
+                                                <th>Lokasi</th>
+                                                <th>Status</th>
+                                                <th>Catatan</th>
+                                                <th style="width: 180px">Aksi</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
                                 </div>
-                                <div class="col-2 text-right">
-                                    <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#tambah">
-                                        <i class="icon icon-add"> Tambah</i>
-                                    </button>
-                                </div>
+                                <!-- /.card -->
                             </div>
+                            <!-- /.col -->
                         </div>
-                        <div class="card-body">
-                            <table id="datatableKegiatan" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kegiatan</th>
-                                    <th>Tanggal Mulai</th>
-                                    <th>Tanggal Selesai</th>
-                                    <th>Lokasi</th>
-                                    <th>Status</th>
-                                    <th>Catatan</th>
-                                    <th style="width: 180px">Aksi</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
+                        <!-- /.row -->
                     </div>
-                    <!-- /.card -->
                 </div>
-                <!-- /.col -->
+                <!-- /.content -->
             </div>
-            <!-- /.row -->
+            <div class="tab-pane fade show" id="selesai" role="tabpanel">
+                <!-- Main content -->
+                <div class="content-wrapper animatedParent animateOnce">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-header">
+                                        <h6 class="card-title">Tabel Data Kegiatan > Selesai</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="datatableKegiatanSelesai" class="table table-bordered table-striped" style="width: 100%">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Kegiatan</th>
+                                                <th>Tanggal Mulai</th>
+                                                <th>Tanggal Selesai</th>
+                                                <th>Lokasi</th>
+                                                <th>Status</th>
+                                                <th>Catatan</th>
+                                                <th style="width: 90px">Aksi</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                </div>
+                <!-- /.content -->
+            </div>
+            <div class="tab-pane fade show" id="batal" role="tabpanel">
+                <!-- Main content -->
+                <div class="content-wrapper animatedParent animateOnce">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+
+                                <div class="card">
+                                    <!-- /.card-header -->
+                                    <div class="card-header">
+                                        <h6 class="card-title">Tabel Data Kegiatan > Batal</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <table id="datatableKegiatanBatal" class="table table-bordered table-striped" style="width: 100%">
+                                            <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Kegiatan</th>
+                                                <th>Tanggal Mulai</th>
+                                                <th>Tanggal Selesai</th>
+                                                <th>Lokasi</th>
+                                                <th>Status</th>
+                                                <th>Catatan</th>
+{{--                                                <th style="width: 180px">Aksi</th>--}}
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                </div>
+                <!-- /.content -->
+            </div>
         </div>
     </div>
-    <!-- /.content -->
 
     <!-- Modal -->
     <div class="modal fade" id="tambah"
@@ -242,19 +352,15 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="iuran">Jenis Anggota</label>
-                        <select class="form-control" onchange="pengurus(this)"  id="status_anggota" name="status_anggota" required>
+                        <select class="form-control" onchange="panitia(this)"  id="status_anggota" name="status_anggota" required>
                             <option selected disabled>Pilih Jenis Anggota</option>
-                            <option value="Pengurus">Pengurus</option>
+                            <option value="Panitia">Panitia</option>
                             <option value="Peserta">Peserta</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="maksimal_anggota">Maksimal Anggota</label>
-                        <input name="maksimal_anggota" type="number" class="form-control form-control-lg"
-                               placeholder="Maksimal Anggota" required>
-                    </div>
+                <div class="col-4 tampil_maksimal_anggota">
+
                 </div>
             </div>
              `);
@@ -274,11 +380,16 @@
             $("#hapus-detail").hide();
         }
 
-        function pengurus(data){
+        function panitia(data){
 
-            if (data.value == "Pengurus") {
+            if (data.value == "Panitia") {
                 $("#detail-anggota").show();
+                $("#maksimal_anggota").remove();
             }else{
+                $('.tampil_maksimal_anggota').append('<div class="form-group" id="maksimal_anggota"> ' +
+                    '<label for="maksimal_anggota">Maksimal Anggota</label>' +
+                    '<input name="maksimal_anggota" type="number" class="form-control form-control-lg" placeholder="Maksimal Anggota" required>' +
+                    '</div>');
                 $("#detail-anggota").hide();
                 $("#hapus-detail-anggota").hide();
                 i--;
@@ -324,19 +435,18 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="iuran">Jenis Iuran</label>
-                        <select class="form-control"  id="iuran" name="status" required>
+                        <select class="form-control" onchange="tglIuran(this)" id="iuran" name="status" required>
                             <option selected disabled>Pilih Jenis Iuran</option>
                             <option value="Wajib">Wajib</option>
                             <option value="Tidak Wajib">Tidak Wajib</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="nominal">Nominal Iuran</label>
-                        <input name="nominal" type="number" class="form-control form-control-lg"
-                               placeholder="Nominal" required>
-                    </div>
+                <div class="col-4 tampil_nominal_iuran">
+
+                </div>
+                <div class="col-4 tampil_tgl_iuran">
+
                 </div>
             </div>
              `);
@@ -348,6 +458,22 @@
             $(`#iuran-c`).remove();
             $("#tambah-iuran").show();
             $("#hapus-iuran").hide();
+        }
+
+        function tglIuran(data){
+            if (data.value == "Wajib") {
+                $(".tampil_nominal_iuran").append('<div class="form-group" id="nominal_iuran">' +
+                    '<label for="nominal">Nominal Iuran</label>' +
+                    '<input name="nominal" type="number" class="form-control form-control-lg" placeholder="Nominal" required>' +
+                    '</div>');
+                $(".tampil_tgl_iuran").append('<div class="form-group" id="tgl_iuran">' +
+                    '<label for="nominal">Tanggal Terakhir Pembayaran</label>' +
+                    '<input name="tgl_terakhir_pembayaran" type="date" class="form-control form-control-lg" required>' +
+                    '</div>');
+            }else{
+                $("#tgl_iuran").remove();
+                $("#nominal_iuran").remove();
+            }
         }
 
         $(function() {
@@ -392,6 +518,98 @@
                         data: 'action',
                         name: 'action'
                     },
+                ]
+            });
+        });
+
+        $(function() {
+            $('#datatableKegiatanSelesai').DataTable({
+                processing: true,
+                responsive: true,
+                serverSide: true,
+                info: true,
+                ajax: '/rt/kegiatan/datatableSelesai',
+                columns: [{
+                    "data": null,
+                    'sortable': false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'tgl_mulai',
+                        name: 'tgl_mulai'
+                    },
+                    {
+                        data: 'tgl_selesai',
+                        name: 'tgl_selesai'
+                    },
+                    {
+                        data: 'lokasi',
+                        name: 'lokasi'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'catatan',
+                        name: 'catatan'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    },
+                ]
+            });
+        });
+
+        $(function() {
+            $('#datatableKegiatanBatal').DataTable({
+                processing: true,
+                responsive: true,
+                serverSide: true,
+                info: true,
+                ajax: '/rt/kegiatan/datatableBatal',
+                columns: [{
+                    "data": null,
+                    'sortable': false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                    {
+                        data: 'nama',
+                        name: 'nama'
+                    },
+                    {
+                        data: 'tgl_mulai',
+                        name: 'tgl_mulai'
+                    },
+                    {
+                        data: 'tgl_selesai',
+                        name: 'tgl_selesai'
+                    },
+                    {
+                        data: 'lokasi',
+                        name: 'lokasi'
+                    },
+                    {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
+                        data: 'catatan',
+                        name: 'catatan'
+                    },
+                    // {
+                    //     data: 'action',
+                    //     name: 'action'
+                    // },
                 ]
             });
         });

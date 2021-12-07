@@ -22,6 +22,15 @@
             <div class="row">
                 <div class="col-12">
 
+                    @if($data['status'] == 'Wajib')
+                    <div class="card">
+                        <div class="card-body">
+                            <p class="card-title">Nominal Iuran : Rp. {{number_format($data['nominal'], 2)}}</p>
+                            <p class="card-title">Terakhir Pembayaran : {{$data['tgl_terakhir_pembayaran']}}</p>
+                        </div>
+                    </div>
+                    <br>
+                    @endif
                     <div class="card">
                         <!-- /.card-header -->
                         <div class="card-header">
@@ -33,6 +42,9 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
+                                    <th>Dibayar</th>
+                                    <th>Tanggal Pembayaran</th>
+                                    <th>Status</th>
                                     <th>Keterangan</th>
                                     <th style="width: 180px">Aksi</th>
                                 </tr>
@@ -51,10 +63,36 @@
         </div>
     </div>
     <!-- /.content -->
+
+    <div class="modal fade" id="bayar" tabindex="-1"
+         role="dialog" aria-labelledby="myModalLabel">
+
+    </div>
 @endsection
 
 @section('script')
     <script>
+        function status(data){
+            // console.log(data);
+            $('#bayar').append('<div class="modal-dialog width-400" id="bayar-id" role="document">\n' +
+                '            <div class="modal-content no-r "><a href="#" data-dismiss="modal" aria-label="Close"\n' +
+                '                                                class="paper-nav-toggle active"><i></i></a>\n' +
+                '                <div\n' +
+                '                    class="modal-body no-p">\n' +
+                '                    <div class="text-center p-40 p-b-0" style="margin-bottom: 10px">\n' +
+                '                        <i class="icon s-48 icon-warning3 red-text"></i>\n' +
+                '                        <p class="p-t-b-20">Apakah anda yakin ingin mengubah status pembayaran?</p>\n' +
+                '                        <a href="#" class="danger btn btn-danger btn-fab-md" data-dismiss="modal" aria-label="Close">Tidak</a>\n' +
+                '                        <a href="/rt/kegiatan/detail-iuran/status/'+ data +'" class="btn btn-primary btn-fab-md">Ya</a>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '        </div>');
+        }
+
+        $('#bayar').on('hidden.bs.modal', function () {
+            $('#bayar-id').remove();
+        });
 
         $(function() {
             $('#datatableDetailIuran').DataTable({
@@ -75,8 +113,20 @@
                         name: 'nama'
                     },
                     {
+                        data: 'uang',
+                        name: 'uang'
+                    },
+                    {
+                        data: 'tgl_pembayaran',
+                        name: 'tgl_pembayaran'
+                    },
+                    {
                         data: 'status',
                         name: 'status'
+                    },
+                    {
+                        data: 'keterangan',
+                        name: 'keterangan'
                     },
                     {
                         data: 'action',

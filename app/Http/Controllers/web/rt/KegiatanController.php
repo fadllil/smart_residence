@@ -60,37 +60,39 @@ class KegiatanController extends Controller
             ]);
 
             if ($request->status_anggota){
-                $kegiatan_anggota = KegiatanAnggota::create([
-                    'id_kegiatan' => $kegiatan->id,
-                    'status' => $request->status_anggota,
-                    'maksimal_anggota' => $request->maksimal_anggota
-                ]);
-                if ($request->id_user){
-                    $count = 0;
-                    foreach ($request->id_user as $key => $id_user){
-                        $keterangan = $request->keterangan[$key];
-                        KegiatanDetailAnggota::create([
-                            'id_kegiatan_anggota' => $kegiatan_anggota->id,
-                            'id_user' => $id_user,
-                            'keterangan' => $keterangan
-                        ]);
-                        $count++;
+                if ($request->status_anggota == "Panitia"){
+                    $kegiatan_anggota = KegiatanAnggota::create([
+                        'id_kegiatan' => $kegiatan->id,
+                        'status' => $request->status_anggota
+                    ]);
+                    if ($request->id_user){
+                        foreach ($request->id_user as $key => $id_user){
+                            $keterangan = $request->keterangan[$key];
+                            KegiatanDetailAnggota::create([
+                                'id_kegiatan_anggota' => $kegiatan_anggota->id,
+                                'id_user' => $id_user,
+                                'keterangan' => $keterangan
+                            ]);
+                        }
                     }
-                    if ($count > $kegiatan_anggota->maksimal_anggota){
-                        DB::rollBack();
-                        return redirect()->back()->with('warning', 'Jumlah anggota melebihi kapasitas');
-                    }
+                }else{
+                    KegiatanAnggota::create([
+                        'id_kegiatan' => $kegiatan->id,
+                        'status' => $request->status_anggota,
+                        'maksimal_anggota' => $request->maksimal_anggota
+                    ]);
                 }
             }
 
-
             if ($request->status){
-                $iuran = KegiatanIuran::create([
-                    'id_kegiatan' => $kegiatan->id,
-                    'status' => $request->status,
-                    'nominal' => $request->nominal
-                ]);
                 if ($request->status == "Wajib"){
+                    $iuran = KegiatanIuran::create([
+                        'id_kegiatan' => $kegiatan->id,
+                        'status' => $request->status,
+                        'nominal' => $request->nominal,
+                        'tgl_terakhir_pembayaran' => $request->tgl_terakhir_pembayaran
+                    ]);
+
                     $warga = Warga::where('id_rt', $rt->id)->get();
                     foreach ($warga as $w){
                         KegiatanDetailIuran::create([
@@ -99,6 +101,11 @@ class KegiatanController extends Controller
                             'status' => "Belum Bayar"
                         ]);
                     }
+                }else{
+                    KegiatanIuran::create([
+                        'id_kegiatan' => $kegiatan->id,
+                        'status' => $request->status,
+                    ]);
                 }
             }
             DB::commit();
@@ -174,6 +181,92 @@ class KegiatanController extends Controller
                             </div>';
                 })
                 ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function datatableSelesai(Request $request){
+        if ($request->ajax()) {
+            $rt = AdminRT::where('id_user', Auth::user()->id)->first();
+            $data = Kegiatan::where([
+                'id_rt' => $rt->id_rt,
+                'status' => "Selesai"
+            ])->with('anggota')->with('iuran')->latest()->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    $btnAnggota = '<a hidden></a>';
+                    $btnIuran = '<a hidden></a>';
+                    if (count($row->iuran) > 0){
+                        $btnIuran = '<a class="dropdown-item" href="/rt/kegiatan/detail-iuran/'.$row->id.'"><i class="icon icon-money"> Iuran</i></a>';
+                    }
+                    if (count($row->anggota) > 0) {
+                        $btnAnggota = '<a class="dropdown-item" href="/rt/kegiatan/detail-anggota/' . $row->id . '"><i class="icon icon-users"> Anggota</i></a>';
+                    }
+
+
+                    return '<div class="dropdown show">
+                                  <a class="btn btn-outline-primary btn-sm dropdown-toggle" href="#" role="button"
+                                  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="icon icon-details"> Detail</i></a>
+                                  </a>
+
+                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    '.$btnAnggota.$btnIuran.'
+                                  </div>
+                                </div>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+
+    public function datatableBatal(Request $request){
+        if ($request->ajax()) {
+            $rt = AdminRT::where('id_user', Auth::user()->id)->first();
+            $data = Kegiatan::where([
+                'id_rt' => $rt->id_rt,
+                'status' => "Batal"
+            ])->with('anggota')->with('iuran')->latest()->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+//                ->addColumn('action', function ($row) {
+//                    $btnAnggota = '<a hidden></a>';
+//                    $btnIuran = '<a hidden></a>';
+//                    if (count($row->iuran) > 0){
+//                        $btnIuran = '<a class="dropdown-item" href="/rt/kegiatan/detail-iuran/'.$row->id.'"><i class="icon icon-money"> Iuran</i></a>';
+//                    }
+//                    if (count($row->anggota) > 0) {
+//                        $btnAnggota = '<a class="dropdown-item" href="/rt/kegiatan/detail-anggota/' . $row->id . '"><i class="icon icon-users"> Anggota</i></a>';
+//                    }
+//
+//                    return '<div class="row" style="padding-left: 10px; padding-right: 10px">
+//                                <div class="dropdown show">
+//                                  <a class="btn btn-outline-primary btn-sm dropdown-toggle" href="#" role="button"
+//                                  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+//                                    <i class="icon icon-details"> Detail</i></a>
+//                                  </a>
+//
+//                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+//                                    '.$btnAnggota.$btnIuran.'
+//                                  </div>
+//                                </div>
+//                                <div class="dropdown show">
+//                                  <a class="btn btn-outline-secondary btn-sm dropdown-toggle" href="#" role="button"
+//                                  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+//                                    <i class="icon icon-details"> Status</i></a>
+//                                  </a>
+//
+//                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+//                                    <a class="dropdown-item" href="/rt/kegiatan/selesai/'.$row->id.'"><i class="icon icon-check"> Selesai</i></a>
+//                                    <a class="dropdown-item" href="/rt/kegiatan/batal/'.$row->id.'"><i class="icon icon-close"> Batal</i></a>
+//                                  </div>
+//                                </div>
+//                            </div>';
+//                })
+//                ->rawColumns(['action'])
                 ->make(true);
         }
     }
