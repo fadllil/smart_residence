@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 07, 2021 at 10:24 AM
+-- Generation Time: Dec 16, 2021 at 06:30 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.15
 
@@ -75,6 +75,25 @@ INSERT INTO `informasi` (`id`, `id_rt`, `judul`, `isi`, `keterangan`, `tanggal`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `jenis_surat`
+--
+
+CREATE TABLE `jenis_surat` (
+  `id` bigint(20) NOT NULL,
+  `id_rt` bigint(20) NOT NULL,
+  `jenis` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `jenis_surat`
+--
+
+INSERT INTO `jenis_surat` (`id`, `id_rt`, `jenis`) VALUES
+(1, 1, 'Kematian');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `kab_kota`
 --
 
@@ -141,8 +160,8 @@ CREATE TABLE `kegiatan` (
 
 INSERT INTO `kegiatan` (`id`, `id_rt`, `nama`, `tgl_mulai`, `tgl_selesai`, `lokasi`, `status`, `catatan`, `created_at`, `updated_at`) VALUES
 (35, 1, 'Test 1', '2021-12-07', '2021-12-16', 'Masjid', 'Belum Terlaksana', '-', '2021-12-06 23:17:35', '2021-12-06 23:17:35'),
-(36, 1, 'Test 2', '2021-12-01', '2021-12-31', '-', 'Belum Terlaksana', '-', '2021-12-06 23:21:14', '2021-12-06 23:21:14'),
-(39, 1, 'Test 3', '2021-12-07', '2021-12-30', '-', 'Belum Terlaksana', '-', '2021-12-06 23:27:46', '2021-12-06 23:27:46');
+(36, 1, 'Test 2', '2021-12-01', '2021-12-31', '-', 'Selesai', '-', '2021-12-06 23:21:14', '2021-12-08 16:48:02'),
+(39, 1, 'Test 3', '2021-12-07', '2021-12-30', '-', 'Belum Terlaksana', '-', '2021-12-06 23:27:46', '2021-12-08 16:36:13');
 
 -- --------------------------------------------------------
 
@@ -213,8 +232,8 @@ CREATE TABLE `kegiatan_detail_iuran` (
 --
 
 INSERT INTO `kegiatan_detail_iuran` (`id`, `id_iuran`, `id_user`, `uang`, `tgl_pembayaran`, `status`, `gambar`, `keterangan`, `created_at`, `updated_at`) VALUES
-(13, 16, 10, NULL, NULL, 'Belum Bayar', NULL, NULL, '2021-12-06 23:21:14', '2021-12-06 23:21:14'),
-(15, 19, 10, NULL, NULL, 'Belum Bayar', NULL, NULL, '2021-12-06 23:27:46', '2021-12-06 23:27:46');
+(13, 16, 10, 50000, '2021-12-08', 'Sudah Bayar', '/upload-file/buktiIuran/1638979992-LmTy3GEBUItD9Z7jfVQqJILHm1dmuOPlQ9.jpg', '-', '2021-12-06 23:21:14', '2021-12-08 16:33:06'),
+(15, 19, 10, 40000, '2021-12-08', 'Menunggu Validasi', '/upload-file/buktiIuran/1638981346-KIVaJlIzWzZfYbx3JgVamCvo9FXmliVNLq.jpg', '-', '2021-12-06 23:27:46', '2021-12-08 16:35:46');
 
 -- --------------------------------------------------------
 
@@ -261,6 +280,27 @@ CREATE TABLE `kelurahan` (
 INSERT INTO `kelurahan` (`id`, `id_kecamatan`, `nama`, `created_at`, `updated_at`) VALUES
 (2, 1, 'Simpang Baru', '2021-08-23 18:25:54', '2021-08-23 18:25:54'),
 (6, 1, 'Tabek Gadang', '2021-08-24 10:12:22', '2021-08-24 10:12:22');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `keuangan`
+--
+
+CREATE TABLE `keuangan` (
+  `id` bigint(20) NOT NULL,
+  `id_rt` bigint(20) NOT NULL,
+  `nominal` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `keuangan`
+--
+
+INSERT INTO `keuangan` (`id`, `id_rt`, `nominal`, `created_at`, `updated_at`) VALUES
+(2, 1, 40000, '2021-12-08 16:48:02', '2021-12-09 16:18:00');
 
 -- --------------------------------------------------------
 
@@ -315,6 +355,52 @@ CREATE TABLE `pelaporan` (
 
 INSERT INTO `pelaporan` (`id`, `id_rt`, `id_user`, `judul`, `isi`, `keterangan`, `tgl_diproses`, `gambar`, `status`, `created_at`, `updated_at`) VALUES
 (2, 1, 10, 'test', 'qwe', 'jdb', NULL, '/upload-file/pelaporan/1638603239-pQg9y1un8LPVaeKSao7yTeeN5u82DQXusB.jpg', 'Belum Diproses', '2021-12-04 07:33:59', '2021-12-04 07:33:59');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pemasukan`
+--
+
+CREATE TABLE `pemasukan` (
+  `id` bigint(20) NOT NULL,
+  `id_rt` bigint(20) NOT NULL,
+  `id_kegiatan` bigint(20) NOT NULL,
+  `nominal` int(11) NOT NULL,
+  `keterangan` varchar(100) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `pemasukan`
+--
+
+INSERT INTO `pemasukan` (`id`, `id_rt`, `id_kegiatan`, `nominal`, `keterangan`, `created_at`, `updated_at`) VALUES
+(3, 1, 36, 50000, 'Iuran', '2021-12-08 16:48:02', '2021-12-08 16:48:02');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pengeluaran`
+--
+
+CREATE TABLE `pengeluaran` (
+  `id` bigint(20) NOT NULL,
+  `id_rt` bigint(20) NOT NULL,
+  `id_kegiatan` bigint(20) NOT NULL,
+  `nominal` int(11) NOT NULL,
+  `keterangan` varchar(100) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `pengeluaran`
+--
+
+INSERT INTO `pengeluaran` (`id`, `id_rt`, `id_kegiatan`, `nominal`, `keterangan`, `created_at`, `updated_at`) VALUES
+(2, 1, 36, 10000, 'Air Minum', '2021-12-09 16:18:00', '2021-12-09 16:18:00');
 
 -- --------------------------------------------------------
 
@@ -389,8 +475,9 @@ CREATE TABLE `surat` (
   `id` bigint(20) NOT NULL,
   `id_rt` bigint(20) NOT NULL,
   `id_user` bigint(20) NOT NULL,
-  `jenis` enum('Surat Pengantar','Surat Keterangan') NOT NULL,
+  `id_jenis_surat` int(11) NOT NULL,
   `keterangan` text NOT NULL,
+  `status` enum('Pengajuan','Selesai') NOT NULL,
   `tanggal` date NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -400,8 +487,9 @@ CREATE TABLE `surat` (
 -- Dumping data for table `surat`
 --
 
-INSERT INTO `surat` (`id`, `id_rt`, `id_user`, `jenis`, `keterangan`, `tanggal`, `created_at`, `updated_at`) VALUES
-(1, 1, 10, 'Surat Pengantar', 'asdc', '2021-12-07', '2021-12-06 21:47:33', '2021-12-06 21:47:33');
+INSERT INTO `surat` (`id`, `id_rt`, `id_user`, `id_jenis_surat`, `keterangan`, `status`, `tanggal`, `created_at`, `updated_at`) VALUES
+(1, 1, 10, 1, 'asdc', 'Pengajuan', '2021-12-07', '2021-12-06 21:47:33', '2021-12-06 21:47:33'),
+(3, 1, 10, 1, 'ggh', 'Pengajuan', '2021-12-15', '2021-12-15 16:49:04', '2021-12-15 16:49:04');
 
 -- --------------------------------------------------------
 
@@ -474,6 +562,12 @@ ALTER TABLE `informasi`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `jenis_surat`
+--
+ALTER TABLE `jenis_surat`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `kab_kota`
 --
 ALTER TABLE `kab_kota`
@@ -522,6 +616,12 @@ ALTER TABLE `kelurahan`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `keuangan`
+--
+ALTER TABLE `keuangan`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -531,6 +631,18 @@ ALTER TABLE `migrations`
 -- Indexes for table `pelaporan`
 --
 ALTER TABLE `pelaporan`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pemasukan`
+--
+ALTER TABLE `pemasukan`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `pengeluaran`
+--
+ALTER TABLE `pengeluaran`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -588,6 +700,12 @@ ALTER TABLE `informasi`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT for table `jenis_surat`
+--
+ALTER TABLE `jenis_surat`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `kab_kota`
 --
 ALTER TABLE `kab_kota`
@@ -636,6 +754,12 @@ ALTER TABLE `kelurahan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `keuangan`
+--
+ALTER TABLE `keuangan`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
@@ -645,6 +769,18 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `pelaporan`
 --
 ALTER TABLE `pelaporan`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `pemasukan`
+--
+ALTER TABLE `pemasukan`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `pengeluaran`
+--
+ALTER TABLE `pengeluaran`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
@@ -669,7 +805,7 @@ ALTER TABLE `rw`
 -- AUTO_INCREMENT for table `surat`
 --
 ALTER TABLE `surat`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
