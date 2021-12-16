@@ -11,6 +11,8 @@ use App\Http\Controllers\api\KegiatanController;
 use App\Http\Controllers\api\InformasiController;
 use App\Http\Controllers\api\PelaporanController;
 use App\Http\Controllers\api\SuratController;
+use App\Http\Controllers\api\KeuanganController;
+use App\Http\Controllers\api\JenisSuratController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,7 @@ Route::group(['prefix' => 'rt','middleware' => 'jwt.auth.mobile'], function () {
     });
 
     Route::group(['prefix' => 'kegiatan'], function () {
+        Route::get('/{id}', [KegiatanController::class, 'index']);
         Route::get('/proses/{id}', [KegiatanController::class, 'proses']);
         Route::get('/selesai/{id}', [KegiatanController::class, 'selesai']);
         Route::get('/batal/{id}', [KegiatanController::class, 'batal']);
@@ -51,9 +54,11 @@ Route::group(['prefix' => 'rt','middleware' => 'jwt.auth.mobile'], function () {
         Route::get('/postSelesai/{id}', [KegiatanController::class, 'postSelesai']);
         Route::get('/postBatal/{id}', [KegiatanController::class, 'postBatal']);
         Route::get('/detail_anggota/{id}', [KegiatanController::class, 'detailAnggota']);
-        Route::get('/detail_iuran/{id}', [KegiatanController::class, 'detailIuran']);
+        Route::get('/detail_iuran/belum_bayar/{id}', [KegiatanController::class, 'detailIuranBelumBayar']);
+        Route::get('/detail_iuran/menunggu_validasi/{id}', [KegiatanController::class, 'detailIuranMenungguValidasi']);
+        Route::get('/detail_iuran/sudah_bayar/{id}', [KegiatanController::class, 'detailIuranSudahBayar']);
         Route::get('/detail_iuran_warga/{id}/{id_user}', [KegiatanController::class, 'detailIuranWarga']);
-        Route::post('/iuran/bayar', [KegiatanController::class, 'bayar']);
+        Route::get('/iuran/validasi/{id}', [KegiatanController::class, 'validasi']);
     });
 
     Route::group(['prefix' => 'informasi'], function () {
@@ -65,6 +70,24 @@ Route::group(['prefix' => 'rt','middleware' => 'jwt.auth.mobile'], function () {
         Route::get('/belum_diproses/{id}', [PelaporanController::class, 'belumDiproses']);
         Route::get('/diproses/{id}', [PelaporanController::class, 'diproses']);
         Route::get('/selesai/{id}', [PelaporanController::class, 'selesai']);
+    });
+
+    Route::group(['prefix' => 'keuangan'], function () {
+        Route::get('/{id}', [KeuanganController::class, 'keuangan']);
+        Route::get('/pemasukan/{id}', [KeuanganController::class, 'pemasukan']);
+        Route::get('/pengeluaran/{id}', [KeuanganController::class, 'pengeluaran']);
+        Route::post('/pengeluaran/create', [KeuanganController::class, 'createPengeluaran']);
+    });
+
+    Route::group(['prefix' => 'jenis-surat'], function () {
+        Route::get('/{id}', [JenisSuratController::class, 'index']);
+        Route::post('/create', [JenisSuratController::class, 'create']);
+        Route::post('/update', [JenisSuratController::class, 'update']);
+        Route::get('/delete/{id}', [JenisSuratController::class, 'delete']);
+    });
+
+    Route::group(['prefix' => 'surat'], function () {
+        Route::get('/{id}', [SuratController::class, 'index']);
     });
 });
 
@@ -83,8 +106,10 @@ Route::group(['prefix' => 'warga','middleware' => 'jwt.auth.mobile'], function (
 
     Route::group(['prefix' => 'surat'], function () {
         Route::post('/create', [SuratController::class, 'create']);
-        Route::get('/keterangan/{id}', [SuratController::class, 'getSuratWargaKeterangan']);
-        Route::get('/pengantar/{id}', [SuratController::class, 'getSuratWargaPengantar']);
+        Route::get('/{id}', [SuratController::class, 'getSuratWarga']);
+    });
+    Route::group(['prefix' => 'kegiatan'], function () {
+        Route::post('/iuran/bayar', [KegiatanController::class, 'bayar']);
     });
 });
 

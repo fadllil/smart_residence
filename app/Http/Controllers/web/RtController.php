@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Keuangan;
 use App\Models\Provinsi;
 use App\Models\RT;
 use App\Models\RW;
@@ -46,8 +47,13 @@ class RtController extends Controller
                 return redirect()->back()->with('warning', 'Nama RT sudah terdaftar di RW tersbut');
             }
         }
+
         unset($request['id_provinsi']);
-        RT::create($request->all());
+        $data = RT::create($request->all());
+        Keuangan::create([
+            'id_rt' => $data->id,
+            'nominal' => 0,
+        ]);
         return redirect()->back()->with('succes', 'Berhasil Menambah Data RT');
     }
 

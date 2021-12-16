@@ -10,7 +10,10 @@ use App\Models\KegiatanAnggota;
 use App\Models\KegiatanDetailAnggota;
 use App\Models\KegiatanDetailIuran;
 use App\Models\KegiatanIuran;
+use App\Models\Keuangan;
+use App\Models\Pemasukan;
 use App\Models\Warga;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +21,14 @@ use Illuminate\Support\Facades\Validator;
 
 class KegiatanController extends Controller
 {
+    public function index($id){
+        $data = Kegiatan::select('kegiatan.*')->where('id_rt', $id)->latest()->get();
+        if (!$data){
+            return Response::failure('Data kegiatan tidak ditemukan', 404);
+        }
+        return  Response::success('data kegiatan', $data);
+    }
+
     public function proses($id){
         $data = Kegiatan::where([
             'id_rt' => $id,
@@ -61,10 +72,39 @@ class KegiatanController extends Controller
         return  Response::success('data detail anggota', $data);
     }
 
-    public function detailIuran($id){
-        $data = KegiatanIuran::where([
-            'id_kegiatan' => $id
-        ])->with('detailIuran.user')->latest()->first();
+    public function detailIuranBelumBayar($id){
+        $data = KegiatanDetailIuran::select('kegiatan_detail_iuran.*', 'kegiatan_iuran.nominal', 'kegiatan_iuran.tgl_terakhir_pembayaran')
+            ->join('kegiatan_iuran', 'kegiatan_iuran.id', '=', 'kegiatan_detail_iuran.id_iuran')
+            ->where([
+                'kegiatan_iuran.id_kegiatan' => $id,
+                'kegiatan_detail_iuran.status' => 'Belum Bayar'
+            ])->with('user')->latest()->get();
+        if (!$data){
+            return Response::failure('Data detail iuran tidak ditemukan', 404);
+        }
+        return  Response::success('data detail iuran', $data);
+    }
+
+    public function detailIuranMenungguValidasi($id){
+        $data = KegiatanDetailIuran::select('kegiatan_detail_iuran.*', 'kegiatan_iuran.nominal', 'kegiatan_iuran.tgl_terakhir_pembayaran')
+            ->join('kegiatan_iuran', 'kegiatan_iuran.id', '=', 'kegiatan_detail_iuran.id_iuran')
+            ->where([
+                'kegiatan_iuran.id_kegiatan' => $id,
+                'kegiatan_detail_iuran.status' => 'Menunggu Validasi'
+            ])->with('user')->latest()->get();
+        if (!$data){
+            return Response::failure('Data detail iuran tidak ditemukan', 404);
+        }
+        return  Response::success('data detail iuran', $data);
+    }
+
+    public function detailIuranSudahBayar($id){
+        $data = KegiatanDetailIuran::select('kegiatan_detail_iuran.*', 'kegiatan_iuran.nominal', 'kegiatan_iuran.tgl_terakhir_pembayaran')
+            ->join('kegiatan_iuran', 'kegiatan_iuran.id', '=', 'kegiatan_detail_iuran.id_iuran')
+            ->where([
+                'kegiatan_iuran.id_kegiatan' => $id,
+                'kegiatan_detail_iuran.status' => 'Sudah Bayar'
+            ])->with('user')->latest()->get();
         if (!$data){
             return Response::failure('Data detail iuran tidak ditemukan', 404);
         }
@@ -172,12 +212,47 @@ class KegiatanController extends Controller
     }
 
     public function postSelesai($id){
-        Kegiatan::where('id', $id)->update(['Status' => 'Selesai']);
+        $kegiatan = Kegiatan::where('id', $id)->with('iuran')->first();
+        if (!$kegiatan){
+            return Response::failure('Data tidak ditemukan', 400);
+        }
+
+        if (count($kegiatan->iuran)>0){
+            $total_pemasukan = KegiatanDetailIuran::select('kegiatan_detail_iuran.*')
+                ->join('kegiatan_iuran', 'kegiatan_iuran.id', 'kegiatan_detail_iuran.id_iuran')
+                ->where([
+                    'kegiatan_detail_iuran.status' => 'Sudah Bayar',
+                    'kegiatan_iuran.id_kegiatan' => $id
+                ])
+                ->sum('uang');
+
+            Pemasukan::create([
+                'id_rt' => $kegiatan->id_rt,
+                'id_kegiatan' => $id,
+                'nominal' => $total_pemasukan,
+                'keterangan' => 'Iuran'
+            ]);
+
+            $keuangan = Keuangan::where('id_rt', $kegiatan->id_rt)->first();
+
+            if ($keuangan){
+                $keuangan->update([
+                    'nominal' => $keuangan->nominal + $total_pemasukan
+                ]);
+            }else{
+                Keuangan::create([
+                    'id_rt' => $kegiatan->id_rt,
+                    'nominal' => $total_pemasukan,
+                ]);
+            }
+        }
+        $kegiatan->update(['status' => 'Selesai']);
+
         return Response::success('Berhasil merubah status', null);
     }
 
     public function postBatal($id){
-        Kegiatan::where('id', $id)->update(['Status' => 'Batal']);
+        Kegiatan::where('id', $id)->update(['status' => 'Batal']);
         return Response::success('Berhasil merubah status', null);
     }
 
@@ -185,6 +260,7 @@ class KegiatanController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
+                'id' => 'required',
                 'keterangan' => 'required',
                 'gambar' => 'required',
             ]
@@ -193,5 +269,31 @@ class KegiatanController extends Controller
         if ($validator->fails()) {
             return Response::failure($validator->errors()->first(), 417);
         }
+
+        $iuran = KegiatanDetailIuran::where('id', $request->id)->first();
+        if (!$iuran){
+            return Response::failure('Data tidak ditemukan', 400);
+        }
+
+        $kegiatanIuran = KegiatanIuran::where('id', $iuran->id_iuran)->first();
+
+        $iuran->update([
+            'uang' => $kegiatanIuran->nominal,
+            'keterangan' => $request->keterangan,
+            'gambar' => $request->gambar,
+            'tgl_pembayaran' => Carbon::now(),
+            'status' => 'Menunggu Validasi'
+        ]);
+
+        return Response::success('Berhasil menambah data', null);
+    }
+
+    public function validasi($id){
+        $iuran = KegiatanDetailIuran::where('id', $id)->first();
+        if (!$iuran){
+            return Response::failure('Data tidak ditemukan', 400);
+        }
+        $iuran->update(['status' => 'Sudah Bayar']);
+        return Response::success('Berhasil merubah status', null);
     }
 }

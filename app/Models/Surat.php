@@ -13,8 +13,18 @@ class Surat extends Model
     protected $fillable = [
         'id_rt',
         'id_user',
-        'jenis',
+        'id_jenis_surat',
         'keterangan',
         'tanggal',
     ];
+
+    public function jenisSurat()
+    {
+        return $this->hasOne(JenisSurat::class, 'id', 'id_jenis_surat');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'id_user');
+    }
 }

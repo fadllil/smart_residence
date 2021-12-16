@@ -16,6 +16,7 @@ class KegiatanDetailIuran extends Model
         'uang',
         'tgl_pembayaran',
         'status',
+        'gambar',
         'keterangan'
     ];
 

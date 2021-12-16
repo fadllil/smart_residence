@@ -10,22 +10,20 @@ use Illuminate\Support\Facades\Validator;
 
 class SuratController extends Controller
 {
-    public function getSuratWargaKeterangan($id){
+    public function index($id, Request $request){
         $data = Surat::where([
-            'id_user' => $id,
-            'jenis' => 'Surat Keterangan'
-        ])->latest()->get();
-        if (!$data){
-            return Response::failure('Data surat tidak ditemukan', 404);
-        }
+            'id_rt' => $id,
+            'status' => $request->status
+        ])->with('jenisSurat', 'user')->latest()->get();
+
         return  Response::success('data surat', $data);
     }
 
-    public function getSuratWargaPengantar($id){
+    public function getSuratWarga($id, Request $request){
         $data = Surat::where([
             'id_user' => $id,
-            'jenis' => 'Surat Pengantar'
-        ])->latest()->get();
+            'status' => $request->status
+        ])->with('jenisSurat')->latest()->get();
         if (!$data){
             return Response::failure('Data surat tidak ditemukan', 404);
         }
@@ -38,7 +36,7 @@ class SuratController extends Controller
             [
                 'id_rt' => 'required',
                 'id_user' => 'required',
-                'jenis' => 'required',
+                'id_jenis_surat' => 'required',
                 'keterangan' => 'required',
                 'tanggal' => 'required'
             ]
