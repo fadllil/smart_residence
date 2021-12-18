@@ -5,8 +5,11 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Utils\Response;
 use App\Models\Surat;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Svg\Tag\Rect;
 
 class SuratController extends Controller
 {
@@ -51,5 +54,24 @@ class SuratController extends Controller
         Surat::create($data);
 
         return  Response::success('data surat', $data);
+    }
+
+    public function suratDomisili($id)
+    {
+        // $validator = Validator::make(
+        //     $request->all(),
+        //     [
+        //         'id_user' => 'required',
+        //     ]
+        // );
+        // if ($validator->fails()) {
+        //     return Response::failure($validator->errors()->first(), 417);
+        // }
+
+        $user = User::where('id', $id)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
+        // dd(strtoupper($user->warga->detailRT->detailRW->detailKelurahan->nama));
+        $pdf = PDF::loadView('rt.surat.cetak_surat.domisili', ['user' => $user]);
+    	return $pdf->download('Surat Keterangan Domisili.pdf');
+        // return $pdf->stream();
     }
 }

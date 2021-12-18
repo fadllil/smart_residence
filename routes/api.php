@@ -115,3 +115,7 @@ Route::group(['prefix' => 'warga','middleware' => 'jwt.auth.mobile'], function (
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::group(['prefix' => 'cetak'], function(){
+    Route::get('/domisili/{id}', [SuratController::class, 'suratDomisili']);
+});
