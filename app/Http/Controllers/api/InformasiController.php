@@ -43,4 +43,31 @@ class InformasiController extends Controller
 
         return  Response::success('data informasi', $data);
     }
+
+    public function update(Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id' => 'required',
+                'judul' => 'required',
+                'tanggal' => 'required',
+                'isi' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return Response::failure($validator->errors()->first(), 417);
+        }
+
+        $data = $request->all();
+        unset($data['id']);
+        Informasi::where('id', $request->id)->update($data);
+
+        return Response::success('berhasil merubah data informasi', null);
+    }
+
+    public function delete($id){
+        Informasi::where('id', $id)->delete();
+        return Response::success('berhasil menghapus data informasi', null);
+    }
 }

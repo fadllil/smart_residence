@@ -29,32 +29,10 @@ class KegiatanController extends Controller
         return  Response::success('data kegiatan', $data);
     }
 
-    public function proses($id){
+    public function kegiatan($id, Request $request){
         $data = Kegiatan::where([
             'id_rt' => $id,
-            'status' => "Belum Terlaksana"
-        ])->with('anggota')->with('iuran')->latest()->get();
-        if (!$data){
-            return Response::failure('Data kegiatan tidak ditemukan', 404);
-        }
-        return  Response::success('data kegiatan', $data);
-    }
-
-    public function selesai($id){
-        $data = Kegiatan::where([
-            'id_rt' => $id,
-            'status' => "Selesai"
-        ])->with('anggota')->with('iuran')->latest()->get();
-        if (!$data){
-            return Response::failure('Data kegiatan tidak ditemukan', 404);
-        }
-        return  Response::success('data kegiatan', $data);
-    }
-
-    public function batal($id){
-        $data = Kegiatan::where([
-            'id_rt' => $id,
-            'status' => "Batal"
+            'status' => $request->status
         ])->with('anggota')->with('iuran')->latest()->get();
         if (!$data){
             return Response::failure('Data kegiatan tidak ditemukan', 404);
@@ -114,9 +92,13 @@ class KegiatanController extends Controller
     public function detailIuranWarga($id, $id_user){
         $data = KegiatanIuran::where([
             'id_kegiatan' => $id
-        ])->with('getIuran.user', 'kegiatan')->whereHas('detailIuran', function ($query) use ($id_user){
-            $query->where('id_user', '=', $id_user);
-        })->first();
+        ])->with('kegiatan')->first();
+        $get_iuran = KegiatanDetailIuran::where(['id_iuran' => $data->id ,'id_user' => $id_user])->with('user')->first();
+        $data['berpartisipasi'] = false;
+        if ($get_iuran){
+            $data['berpartisipasi'] = true;
+        }
+        $data['getIuran'] = $get_iuran;
         if (!$data){
             return Response::failure('Data detail iuran tidak ditemukan', 404);
         }
@@ -288,6 +270,36 @@ class KegiatanController extends Controller
         return Response::success('Berhasil menambah data', null);
     }
 
+    public function bayarDonasi(Request $request){
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id' => 'required',
+                'id_user' => 'required',
+                'keterangan' => 'required',
+                'gambar' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return Response::failure($validator->errors()->first(), 417);
+        }
+
+        $kegiatanIuran = KegiatanIuran::where('id', $request->id)->first();
+
+        KegiatanDetailIuran::create([
+            'id_iuran' => $request->id,
+            'id_user' => $request->id_user,
+            'uang' => $request->nominal,
+            'keterangan' => $request->keterangan,
+            'gambar' => $request->gambar,
+            'tgl_pembayaran' => Carbon::now(),
+            'status' => 'Menunggu Validasi'
+        ]);
+
+        return Response::success('Berhasil menambah data', null);
+    }
+
     public function validasi($id){
         $iuran = KegiatanDetailIuran::where('id', $id)->first();
         if (!$iuran){
@@ -295,5 +307,33 @@ class KegiatanController extends Controller
         }
         $iuran->update(['status' => 'Sudah Bayar']);
         return Response::success('Berhasil merubah status', null);
+    }
+
+    public function berpartisipasiPeserta($id, Request $request){
+        $data = KegiatanAnggota::where('id_kegiatan', $id)->first();
+        if (!$data){
+            return Response::failure('Kegiatan tidak ditemukan', 404);
+        }
+        $data['berpartisipasi'] = false;
+        $kegiatan_iuran = KegiatanDetailAnggota::where(['id_user' => $request->user, 'id_kegiatan_anggota' => $data->id])->first();
+        if ($kegiatan_iuran){
+            $data['berpartisipasi'] = true;
+        }
+        $data['user'] = $kegiatan_iuran;
+        return  Response::success('data kegiatan', $data);
+    }
+
+    public function pesertaJoin(Request $request){
+        $validator = Validator::make($request->all(), [
+            'id_kegiatan_anggota' => 'required',
+            'id_user' => 'required',
+            'keterangan' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return Response::failure($validator->errors()->first(), 417);
+        }
+
+        KegiatanDetailAnggota::create($request->all());
+        return  Response::success('Berhasil berpartisipasi', null);
     }
 }

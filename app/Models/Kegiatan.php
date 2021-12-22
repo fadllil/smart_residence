@@ -23,10 +23,10 @@ class Kegiatan extends Model
 
     public function anggota()
     {
-        return $this->hasMany(KegiatanAnggota::class, 'id_kegiatan', 'id');
+        return $this->hasOne(KegiatanAnggota::class, 'id_kegiatan', 'id');
     }
     public function iuran()
     {
-        return $this->hasMany(KegiatanIuran::class, 'id_kegiatan', 'id');
+        return $this->hasOne(KegiatanIuran::class, 'id_kegiatan', 'id');
     }
 }

@@ -11,32 +11,10 @@ use Illuminate\Support\Facades\Validator;
 
 class PelaporanController extends Controller
 {
-    public function belumDiproses($id){
+    public function getPelaporan($id, Request $request){
         $data = Pelaporan::where([
             'id_rt' => $id,
-            'status' => 'Belum Diproses'
-        ])->latest()->get();
-        if (!$data){
-            return Response::failure('Data pelaporan tidak ditemukan', 404);
-        }
-        return  Response::success('data pelaporan', $data);
-    }
-
-    public function diproses($id){
-        $data = Pelaporan::where([
-            'id_rt' => $id,
-            'status' => 'Diproses'
-        ])->latest()->get();
-        if (!$data){
-            return Response::failure('Data pelaporan tidak ditemukan', 404);
-        }
-        return  Response::success('data pelaporan', $data);
-    }
-
-    public function selesai($id){
-        $data = Pelaporan::where([
-            'id_rt' => $id,
-            'status' => 'Selesai'
+            'status' => $request->status
         ])->latest()->get();
         if (!$data){
             return Response::failure('Data pelaporan tidak ditemukan', 404);
@@ -98,5 +76,17 @@ class PelaporanController extends Controller
         $data['status'] = 'Belum Diproses';
         Pelaporan::create($data);
         return Response::success('Berhasil menambah data', null);
+    }
+
+    public function proses($id, Request $request){
+        $pelaporan = Pelaporan::where('id', $id)->first();
+        if (!$pelaporan){
+            return Response::failure('Data tidak ditemukan', 400);
+        }
+        $pelaporan->update([
+            'status' => $request->status,
+            'tgl_diproses' => date('Y-m-d')
+        ]);
+        return Response::success('Berhasil merubah status', null);
     }
 }

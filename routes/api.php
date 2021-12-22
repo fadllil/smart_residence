@@ -47,9 +47,7 @@ Route::group(['prefix' => 'rt','middleware' => 'jwt.auth.mobile'], function () {
 
     Route::group(['prefix' => 'kegiatan'], function () {
         Route::get('/{id}', [KegiatanController::class, 'index']);
-        Route::get('/proses/{id}', [KegiatanController::class, 'proses']);
-        Route::get('/selesai/{id}', [KegiatanController::class, 'selesai']);
-        Route::get('/batal/{id}', [KegiatanController::class, 'batal']);
+        Route::get('/get/{id}', [KegiatanController::class, 'kegiatan']);
         Route::post('/create', [KegiatanController::class, 'create']);
         Route::get('/postSelesai/{id}', [KegiatanController::class, 'postSelesai']);
         Route::get('/postBatal/{id}', [KegiatanController::class, 'postBatal']);
@@ -64,12 +62,13 @@ Route::group(['prefix' => 'rt','middleware' => 'jwt.auth.mobile'], function () {
     Route::group(['prefix' => 'informasi'], function () {
         Route::get('/{id}', [InformasiController::class, 'index']);
         Route::post('/create', [InformasiController::class, 'create']);
+        Route::post('/update', [InformasiController::class, 'update']);
+        Route::get('/delete/{id}', [InformasiController::class, 'delete']);
     });
 
     Route::group(['prefix' => 'pelaporan'], function () {
-        Route::get('/belum_diproses/{id}', [PelaporanController::class, 'belumDiproses']);
-        Route::get('/diproses/{id}', [PelaporanController::class, 'diproses']);
-        Route::get('/selesai/{id}', [PelaporanController::class, 'selesai']);
+        Route::get('/{id}', [PelaporanController::class, 'getPelaporan']);
+        Route::get('/proses/{id}', [PelaporanController::class, 'proses']);
     });
 
     Route::group(['prefix' => 'keuangan'], function () {
@@ -110,6 +109,9 @@ Route::group(['prefix' => 'warga','middleware' => 'jwt.auth.mobile'], function (
     });
     Route::group(['prefix' => 'kegiatan'], function () {
         Route::post('/iuran/bayar', [KegiatanController::class, 'bayar']);
+        Route::post('/iuran/bayar-donasi', [KegiatanController::class, 'bayarDonasi']);
+        Route::get('/peserta-berpartisipasi/{id}', [KegiatanController::class, 'berpartisipasiPeserta']);
+        Route::post('/peserta-join', [KegiatanController::class, 'pesertaJoin']);
     });
 });
 
