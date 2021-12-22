@@ -56,22 +56,82 @@ class SuratController extends Controller
         return  Response::success('data surat', $data);
     }
 
-    public function suratDomisili($id)
+    public function suratDomisili(Request $request)
     {
-        // $validator = Validator::make(
-        //     $request->all(),
-        //     [
-        //         'id_user' => 'required',
-        //     ]
-        // );
-        // if ($validator->fails()) {
-        //     return Response::failure($validator->errors()->first(), 417);
-        // }
+        ini_set('max_execution_time', 3000);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id_user' => 'required',
+                'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'agama' => 'required|in:islam,katolik,protestan,hindu,budha,konghuchu',
+                'pekerjaan' => 'required',
+                'ktp' => 'required'
+            ]
+        );
+        if ($validator->fails()) {
+            return Response::failure($validator->errors()->first(), 417);
+        }
 
-        $user = User::where('id', $id)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
-        // dd(strtoupper($user->warga->detailRT->detailRW->detailKelurahan->nama));
-        $pdf = PDF::loadView('rt.surat.cetak_surat.domisili', ['user' => $user]);
+        $user = User::where('id', $request->id_user)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
+        $pdf = PDF::loadView('rt.surat.cetak_surat.domisili', ['user' => $user, 'data' => $request->all()]);
     	return $pdf->download('Surat Keterangan Domisili.pdf');
-        // return $pdf->stream();
+    }
+
+    public function suratKematian(Request $request)
+    {
+        ini_set('max_execution_time', 3000);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id_user' => 'required',
+                'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'agama' => 'required|in:islam,katolik,protestan,hindu,budha,konghuchu',
+                'pekerjaan' => 'required',
+                'ktp' => 'required',
+                'tanggal_kematian' => 'required',
+                'waktu_kematian' => 'required',
+                'jenis_tempat_kematian' => 'required',
+                'tempat_kematian' => 'required',
+                'tempat_dikebumikan' => 'required',
+                'kerabat' => 'required',
+            ]
+        );
+        if ($validator->fails()) {
+            return Response::failure($validator->errors()->first(), 417);
+        }
+
+        $kerabat = User::where('id', $request->kerabat)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
+        $user = User::where('id', $request->id_user)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
+        $pdf = PDF::loadView('rt.surat.cetak_surat.kematian', ['user' => $user, 'data' => $request->all(), 'kerabat' => $kerabat]);
+    	return $pdf->download('Surat Keterangan Kematian.pdf');
+    }
+
+    public function suratTidakMampu(Request $request)
+    {
+        ini_set('max_execution_time', 3000);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id_user' => 'required',
+                'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'agama' => 'required|in:islam,katolik,protestan,hindu,budha,konghuchu',
+                'pekerjaan' => 'required',
+                'ktp' => 'required'
+            ]
+        );
+        if ($validator->fails()) {
+            return Response::failure($validator->errors()->first(), 417);
+        }
+
+        $user = User::where('id', $request->id_user)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
+        $pdf = PDF::loadView('rt.surat.cetak_surat.tidakMampu', ['user' => $user, 'data' => $request->all()]);
+    	return $pdf->download('Surat Keterangan Keluarga Tidak Mampu.pdf');
     }
 }

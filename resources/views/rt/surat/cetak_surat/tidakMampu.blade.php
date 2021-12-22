@@ -31,7 +31,7 @@
 	</table>
 	<hr style="height:3px;border:none;color:#333;background-color:#333;"><br><br>
 	<center>
-		<u><b>SURAT KETERANGAN BERDOMISILI</b></u><br>
+		<b>SURAT KETERANGAN</b><br><b><u>KELUARGA TIDAK MAMPU</u></b><br>
 		Nomor:00/0000/SKED/0000/2021
 	</center>
 	<br><br>
@@ -77,17 +77,10 @@
 	</table>
 	<p>
 		Nama tersebut diatas adalah benar Warga RT {{ $rt->nama }}, RW {{ $rw->nama }} dan berdomisili dilingkungan
-		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}
+		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }},
+        dan yang bersangkutan adalah benar :
 	</p>
-	<p>
-		Surat Keterangan ini dipergunakan untuk : 
-		<ol>
-			<li>Pengurusan KK</li>
-			<li>Pengurusan KTP</li>
-			<li>Pengurusan SKBB</li>
-			<li>Pengurusan Surat Keterangan Ahli Waris</li>
-		</ol>
-	</p>
+    <center><b>Keluarga Tidak Mampu / Miskin</b></center><br>
 	<p>
 		Demikian Surat Keterangan Domisili ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
 	</p>

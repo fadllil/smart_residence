@@ -31,7 +31,7 @@
 	</table>
 	<hr style="height:3px;border:none;color:#333;background-color:#333;"><br><br>
 	<center>
-		<u><b>SURAT KETERANGAN BERDOMISILI</b></u><br>
+		<u><b>SURAT KETERANGAN KEMATIAN</b></u><br>
 		Nomor:00/0000/SKED/0000/2021
 	</center>
 	<br><br>
@@ -77,17 +77,45 @@
 	</table>
 	<p>
 		Nama tersebut diatas adalah benar Warga RT {{ $rt->nama }}, RW {{ $rw->nama }} dan berdomisili dilingkungan
-		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}
+		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}, 
+        telah <b>Meninggal Dunia </b>pada :
 	</p>
-	<p>
-		Surat Keterangan ini dipergunakan untuk : 
-		<ol>
-			<li>Pengurusan KK</li>
-			<li>Pengurusan KTP</li>
-			<li>Pengurusan SKBB</li>
-			<li>Pengurusan Surat Keterangan Ahli Waris</li>
-		</ol>
-	</p>
+	<table style="margin-left: 50px">
+		<tbody>
+			<tr>
+				<td>Hari/Tanggal</td>
+				<td>: {{ $data['tanggal_kematian'] }}</td>
+			</tr>
+			<tr>
+				<td>Waktu</td>
+				<td>: {{ $data['waktu_kematian'] }} WIB</td>
+			</tr>
+			<tr>
+				<td>Meniggal Dunia</td>
+				<td>
+                    @if($data['jenis_tempat_kematian'] == 'rs')
+                        : di RS/<strike>Kediamannya</strike>/<strike>lainnya</strike> {{ $data['tempat_kematian'] }}
+                    @elseif($data['jenis_tempat_kematian'] == 'kediamannya')
+                        : di <strike>RS</strike>/Kediamannya/<strike>lainnya</strike> {{ $data['tempat_kematian'] }}
+                    @else
+                        : di <strike>RS</strike>/<strike>Kediamannya</strike>/lainnya {{ $data['tempat_kematian'] }}
+                    @endif
+                </td>
+			</tr>
+			<tr>
+				<td>Dikebumikan di </td>
+				<td>: {{ $data['tempat_dikebumikan'] }}</td>
+			</tr>
+			<tr>
+				<td>Suami/Istri/Kerabat dari</td>
+				<td>: {{ $kerabat->nama }}</td>
+			</tr>
+			<tr>
+				<td>Alamat</td>
+				<td>: {{ $user->warga->alamat }}</td>
+			</tr>
+		</tbody>
+	</table>
 	<p>
 		Demikian Surat Keterangan Domisili ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
 	</p>
@@ -110,7 +138,7 @@
 				</td>
 			</tr>
 			<tr style="height: 300px">
-				<td><br><br><br></td>
+				<td><br><br></td>
 				<td></td>
 				<td></td>
 			</tr>

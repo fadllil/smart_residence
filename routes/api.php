@@ -111,11 +111,13 @@ Route::group(['prefix' => 'warga','middleware' => 'jwt.auth.mobile'], function (
     Route::group(['prefix' => 'kegiatan'], function () {
         Route::post('/iuran/bayar', [KegiatanController::class, 'bayar']);
     });
+    
+    Route::group(['prefix' => 'cetak'], function(){
+        Route::post('/domisili', [SuratController::class, 'suratDomisili']);
+        Route::post('/kematian', [SuratController::class, 'suratKematian']);
+        Route::post('/tidak-mampu', [SuratController::class, 'suratTidakMampu']);
+    });
 });
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
-Route::group(['prefix' => 'cetak'], function(){
-    Route::get('/domisili/{id}', [SuratController::class, 'suratDomisili']);
-});
