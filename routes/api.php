@@ -116,6 +116,8 @@ Route::group(['prefix' => 'warga','middleware' => 'jwt.auth.mobile'], function (
         Route::post('/domisili', [SuratController::class, 'suratDomisili']);
         Route::post('/kematian', [SuratController::class, 'suratKematian']);
         Route::post('/tidak-mampu', [SuratController::class, 'suratTidakMampu']);
+        Route::post('/milik-usaha', [SuratController::class, 'suratMilikUsaha']);
+        Route::post('/belum-menikah', [SuratController::class, 'suratBelumMenikah']);
     });
 });
 

@@ -7,6 +7,20 @@
 	$kecamatan = $lurah->detailKecamatan;
 	$kabupaten = $kecamatan->detailKabKota;
 	$provinsi = $kabupaten->detailProvinsi;
+    $bulan = [
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+    ];
 	?>
 <head>
 	<title>Membuat Laporan PDF Dengan DOMPDF Laravel</title>
@@ -32,10 +46,10 @@
 	<hr style="height:3px;border:none;color:#333;background-color:#333;"><br><br>
 	<center>
 		<u><b>SURAT KETERANGAN KEMATIAN</b></u><br>
-		Nomor:00/0000/SKED/0000/2021
+		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKK/{{ date('m') }}/{{ date('Y') }}
 	</center>
 	<br><br>
-	<p>
+	<p align="justify">
 		Yang bertanda tangan dibawah ini Ketua RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }},
 		Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}, dengan ini menerangkan bahwa :
 	</p>
@@ -49,9 +63,12 @@
 				<td>JenisKelamin</td>
 				<td>: {{ $data['jenis_kelamin'] }}</td>
 			</tr>
-			<tr>
+			<tr><?php 
+				$lahir = explode('-', $data['tanggal_lahir']);
+				$b = (int)$lahir[1] - 1;
+				 ?>
 				<td>Tempat/Tgl Lahir</td>
-				<td>: {{ $data['tempat_lahir'].', '.$data['tanggal_lahir'] }}</td>
+				<td>: {{ $data['tempat_lahir'].', '.$lahir[0].' '.$bulan[$b].' '.$lahir[2] }}</td>
 			</tr>
 			<tr>
 				<td>Agama</td>
@@ -75,16 +92,19 @@
 			</tr>
 		</tbody>
 	</table>
-	<p>
+	<p align="justify">
 		Nama tersebut diatas adalah benar Warga RT {{ $rt->nama }}, RW {{ $rw->nama }} dan berdomisili dilingkungan
 		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}, 
         telah <b>Meninggal Dunia </b>pada :
 	</p>
 	<table style="margin-left: 50px">
 		<tbody>
-			<tr>
+			<tr><?php 
+				$mati = explode('-', $data['tanggal_kematian']);
+				$b = (int)$mati[1] - 1;
+				 ?>
 				<td>Hari/Tanggal</td>
-				<td>: {{ $data['tanggal_kematian'] }}</td>
+				<td>: {{ $mati[0].' '.$bulan[$b].' '.$mati[2] }}</td>
 			</tr>
 			<tr>
 				<td>Waktu</td>
@@ -129,9 +149,9 @@
 					</center>
 				</td>
 				<td style="width: 250px"></td>
-				<td>
+				<td><?php $b = (int)date('m') ?>
 					<center>
-						Pekanbaru, {{ date('d M Y') }}<br>
+						Pekanbaru, {{ date('d').' '.$bulan[$b-1].' '.date('Y') }} <br>
 						<b>RUKUN TETANGGA (RT) {{ $rt->nama }}</b><br>
 						Ketua
 					</center>

@@ -7,6 +7,7 @@ use App\Http\Utils\Response;
 use App\Models\Surat;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Svg\Tag\Rect;
@@ -63,6 +64,8 @@ class SuratController extends Controller
             $request->all(),
             [
                 'id_user' => 'required',
+                'id_rt' => 'required',
+                'keterangan' => 'required',
                 'jenis_kelamin' => 'required|in:laki-laki,perempuan',
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
@@ -74,9 +77,20 @@ class SuratController extends Controller
         if ($validator->fails()) {
             return Response::failure($validator->errors()->first(), 417);
         }
+        Surat::create([
+            'id_rt' => $request->id_rt,
+            'id_user' => $request->id_user,
+            'id_jenis_surat' => 4,
+            'keterangan' => $request->keterangan,
+            'status' => 'Pengajuan',
+            'tanggal' => date('Y-m-d')
+        ]);
+        $no = Surat::whereHas('jenisSurat', function(Builder $query){
+            $query->where('jenis', 'Domisili');
+        })->count() + 1;
 
         $user = User::where('id', $request->id_user)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
-        $pdf = PDF::loadView('rt.surat.cetak_surat.domisili', ['user' => $user, 'data' => $request->all()]);
+        $pdf = PDF::loadView('rt.surat.cetak_surat.domisili', ['user' => $user, 'data' => $request->all(), 'no' => $no]);
     	return $pdf->download('Surat Keterangan Domisili.pdf');
     }
 
@@ -87,6 +101,8 @@ class SuratController extends Controller
             $request->all(),
             [
                 'id_user' => 'required',
+                'id_rt' => 'required',
+                'keterangan' => 'required',
                 'jenis_kelamin' => 'required|in:laki-laki,perempuan',
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
@@ -104,10 +120,21 @@ class SuratController extends Controller
         if ($validator->fails()) {
             return Response::failure($validator->errors()->first(), 417);
         }
-
+        
+        Surat::create([
+            'id_rt' => $request->id_rt,
+            'id_user' => $request->id_user,
+            'id_jenis_surat' => 4,
+            'keterangan' => $request->keterangan,
+            'status' => 'Pengajuan',
+            'tanggal' => date('Y-m-d')
+        ]);
+        $no = Surat::whereHas('jenisSurat', function(Builder $query){
+            $query->where('jenis', 'Kematian');
+        })->count() + 1;
         $kerabat = User::where('id', $request->kerabat)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
         $user = User::where('id', $request->id_user)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
-        $pdf = PDF::loadView('rt.surat.cetak_surat.kematian', ['user' => $user, 'data' => $request->all(), 'kerabat' => $kerabat]);
+        $pdf = PDF::loadView('rt.surat.cetak_surat.kematian', ['user' => $user, 'data' => $request->all(), 'kerabat' => $kerabat, 'no' => $no]);
     	return $pdf->download('Surat Keterangan Kematian.pdf');
     }
 
@@ -118,6 +145,8 @@ class SuratController extends Controller
             $request->all(),
             [
                 'id_user' => 'required',
+                'id_rt' => 'required',
+                'keterangan' => 'required',
                 'jenis_kelamin' => 'required|in:laki-laki,perempuan',
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
@@ -129,9 +158,92 @@ class SuratController extends Controller
         if ($validator->fails()) {
             return Response::failure($validator->errors()->first(), 417);
         }
-
+        Surat::create([
+            'id_rt' => $request->id_rt,
+            'id_user' => $request->id_user,
+            'id_jenis_surat' => 4,
+            'keterangan' => $request->keterangan,
+            'status' => 'Pengajuan',
+            'tanggal' => date('Y-m-d')
+        ]);
+        $no = Surat::whereHas('jenisSurat', function(Builder $query){
+            $query->where('jenis', 'Tidak Mampu');
+        })->count() + 1;
         $user = User::where('id', $request->id_user)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
-        $pdf = PDF::loadView('rt.surat.cetak_surat.tidakMampu', ['user' => $user, 'data' => $request->all()]);
+        $pdf = PDF::loadView('rt.surat.cetak_surat.tidakMampu', ['user' => $user, 'data' => $request->all(), 'no' => $no]);
     	return $pdf->download('Surat Keterangan Keluarga Tidak Mampu.pdf');
     }
+
+    public function suratMilikUsaha(Request $request)
+    {
+        ini_set('max_execution_time', 3000);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id_user' => 'required',
+                'id_rt' => 'required',
+                'keterangan' => 'required',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'pekerjaan' => 'required',
+                'nama_usaha' => 'required',
+                'alamat_usaha' => 'required'
+            ]
+        );
+        if ($validator->fails()) {
+            return Response::failure($validator->errors()->first(), 417);
+        }
+        Surat::create([
+            'id_rt' => $request->id_rt,
+            'id_user' => $request->id_user,
+            'id_jenis_surat' => 4,
+            'keterangan' => $request->keterangan,
+            'status' => 'Pengajuan',
+            'tanggal' => date('Y-m-d')
+        ]);
+        $no = Surat::whereHas('jenisSurat', function(Builder $query){
+            $query->where('jenis', 'Memiliki Usaha');
+        })->count() + 1;
+        $user = User::where('id', $request->id_user)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
+        $pdf = PDF::loadView('rt.surat.cetak_surat.milikUsaha', ['user' => $user, 'data' => $request->all(), 'no' => $no]);
+    	return $pdf->download('Surat Keterangan Memiliki Usaha.pdf');
+    }
+
+    public function suratBelumMenikah(Request $request)
+    {
+        ini_set('max_execution_time', 3000);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'id_user' => 'required',
+                'id_rt' => 'required',
+                'keterangan' => 'required',
+                'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required',
+                'agama' => 'required|in:islam,katolik,protestan,hindu,budha,konghuchu',
+                'pekerjaan' => 'required',
+                'ktp' => 'required'
+            ]
+        );
+        if ($validator->fails()) {
+            return Response::failure($validator->errors()->first(), 417);
+        }
+        Surat::create([
+            'id_rt' => $request->id_rt,
+            'id_user' => $request->id_user,
+            'id_jenis_surat' => 4,
+            'keterangan' => $request->keterangan,
+            'status' => 'Pengajuan',
+            'tanggal' => date('Y-m-d')
+        ]);
+        $no = Surat::whereHas('jenisSurat', function(Builder $query){
+            $query->where('jenis', 'Belum Menikah');
+        })->count() + 1;
+        $user = User::where('id', $request->id_user)->with('warga.detailRT.detailRW.detailKelurahan.detailKecamatan.detailKabKota.detailProvinsi')->first();
+        $pdf = PDF::loadView('rt.surat.cetak_surat.belumMenikah', ['user' => $user, 'data' => $request->all(), 'no' => $no]);
+    	return $pdf->download('Surat Keterangan Belum Menikah.pdf');
+    }
+
+
 }

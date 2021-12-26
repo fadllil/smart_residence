@@ -45,13 +45,12 @@
 	</table>
 	<hr style="height:3px;border:none;color:#333;background-color:#333;"><br><br>
 	<center>
-		<u><b>SURAT KETERANGAN BERDOMISILI</b></u><br>
-		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKD/{{ date('m') }}/{{ date('Y') }}
+		<u><b>SURAT KETERANGAN MEMILIKI USAHA</b></u><br>
+		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKMU/{{ date('m') }}/{{ date('Y') }}
 	</center>
 	<br><br>
-	<p align="justify">
-		Yang bertanda tangan dibawah ini Ketua RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }},
-		Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}, dengan ini menerangkan bahwa :
+	<p>
+		Saya yang bertanda tangan dibawah ini :
 	</p>
 	<table style="margin-left: 50px">
 		<tbody>
@@ -59,20 +58,12 @@
 				<td>Nama</td>
 				<td>: {{ $user->nama }}</td>
 			</tr>
-			<tr>
-				<td>JenisKelamin</td>
-				<td>: {{ $data['jenis_kelamin'] }}</td>
-			</tr>
 			<tr><?php 
-			$lahir = explode('-', $data['tanggal_lahir']);
-			$b = (int)$lahir[1] - 1;
-			 ?>
+				$lahir = explode('-', $data['tanggal_lahir']);
+				$b = (int)$lahir[1] - 1;
+				 ?>
 				<td>Tempat/Tgl Lahir</td>
 				<td>: {{ $data['tempat_lahir'].', '.$lahir[0].' '.$bulan[$b].' '.$lahir[2] }}</td>
-			</tr>
-			<tr>
-				<td>Agama</td>
-				<td>: {{ $data['agama'] }}</td>
 			</tr>
 			<tr>
 				<td>Pekerjaan</td>
@@ -82,39 +73,43 @@
 				<td>Alamat</td>
 				<td>: {{ $user->warga->alamat }}</td>
 			</tr>
-			<tr>
-				<td>No KK</td>
-				<td>: {{ $user->warga->no_kk }}</td>
-			</tr>
-			<tr>
-				<td>No KTP</td>
-				<td>: {{ $data['ktp'] }}</td>
-			</tr>
 		</tbody>
-	</table>
+	</table><br>
 	<p align="justify">
-		Nama tersebut diatas adalah benar Warga RT {{ $rt->nama }}, RW {{ $rw->nama }} dan berdomisili dilingkungan
+		Dengan ini menyatakan bahwa saya pada saat ini mempunyai usaha {{ $data['nama_usaha'] }} yang berdomisili di {{ $data['alamat_usaha'] }} RT {{ $rt->nama }}, RW {{ $rw->nama }} dan berdomisili dilingkungan
 		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}
 	</p>
-	<p>
-		Surat Keterangan ini dipergunakan untuk : 
-		<ol>
-			@if($data['jenis'] == "KK")
-				<li>Pengurusan KK</li>
-			@elseif($data['jenis'] == "KTP")
-				<li>Pengurusan KTP</li>
-			@elseif($data['jenis'] == "SKBB")
-				<li>Pengurusan SKBB</li>
-			@elseif($data['jenis'] == "SKAW")
-				<li>Pengurusan Surat Keterangan Ahli Waris</li>
-			@endif
-		</ol>
-	</p>
-	<p>
-		Demikian Surat Keterangan Domisili ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
+	<p align="justify">
+		Demikian Surat Pernyataan ini saya buat dengan sebenarnya dan apabila Pernyataan saya ini tidak benar / palsu,
+        saya bersedia dituntut dimuka pengadilan sesuai peraturan perundangan yang berlaku dan tidak melibatkan pihak kelurahan.
 	</p>
 	<table>
 		<tbody>
+            <tr>
+                <td></td>
+                <td></td>
+				<td><?php $b = (int)date('m') ?>
+					<center>
+						Pekanbaru, {{ date('d').' '.$bulan[$b-1].' '.date('Y') }} <br>
+						Yang Membuat Pernyataan
+					</center>
+				</td>
+            </tr>
+            <tr style="height: 300px">
+				<td><br><br><br></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+				<td></td>
+				<td>
+					<center>
+						{{ $user->nama }}
+					</center>
+				</td>
+			</tr>
 			<tr>
 				<td>
 					<center><br>
@@ -123,9 +118,8 @@
 					</center>
 				</td>
 				<td style="width: 250px"></td>
-				<td><?php $b = (int)date('m') ?>
+				<td>
 					<center>
-						Pekanbaru, {{ date('d').' '.$bulan[$b-1].' '.date('Y') }} <br>
 						<b>RUKUN TETANGGA (RT) {{ $rt->nama }}</b><br>
 						Ketua
 					</center>

@@ -45,8 +45,8 @@
 	</table>
 	<hr style="height:3px;border:none;color:#333;background-color:#333;"><br><br>
 	<center>
-		<u><b>SURAT KETERANGAN BERDOMISILI</b></u><br>
-		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKD/{{ date('m') }}/{{ date('Y') }}
+		<u><b>SURAT KETERANGAN BELUM MENIKAH</b></u><br>
+		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKBM/{{ date('m') }}/{{ date('Y') }}
 	</center>
 	<br><br>
 	<p align="justify">
@@ -95,23 +95,16 @@
 	<p align="justify">
 		Nama tersebut diatas adalah benar Warga RT {{ $rt->nama }}, RW {{ $rw->nama }} dan berdomisili dilingkungan
 		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}
+        dan berstatus <b>Belum Menikah.</b>
 	</p>
 	<p>
 		Surat Keterangan ini dipergunakan untuk : 
 		<ol>
-			@if($data['jenis'] == "KK")
-				<li>Pengurusan KK</li>
-			@elseif($data['jenis'] == "KTP")
-				<li>Pengurusan KTP</li>
-			@elseif($data['jenis'] == "SKBB")
-				<li>Pengurusan SKBB</li>
-			@elseif($data['jenis'] == "SKAW")
-				<li>Pengurusan Surat Keterangan Ahli Waris</li>
-			@endif
+			<li>Mendaftar Pekerjaan</li>
 		</ol>
 	</p>
 	<p>
-		Demikian Surat Keterangan Domisili ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
+		Demikian Surat Keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
 	</p>
 	<table>
 		<tbody>
