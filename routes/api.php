@@ -13,6 +13,7 @@ use App\Http\Controllers\api\PelaporanController;
 use App\Http\Controllers\api\SuratController;
 use App\Http\Controllers\api\KeuanganController;
 use App\Http\Controllers\api\JenisSuratController;
+use App\Http\Controllers\api\AlamatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -120,4 +121,11 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['prefix' => 'cetak'], function(){
     Route::get('/domisili/{id}', [SuratController::class, 'suratDomisili']);
+});
+
+Route::group(['prefix' => 'alamat'], function(){
+    Route::get('/provinsi', [AlamatController::class, 'provinsi']);
+    Route::get('/kabkota', [AlamatController::class, 'kabkota']);
+    Route::get('/kecamatan', [AlamatController::class, 'kecamatan']);
+    Route::get('/kelurahan/{id}', [AlamatController::class, 'kelurahan']);
 });

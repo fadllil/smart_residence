@@ -16,9 +16,9 @@ class KeuanganController extends Controller
         $data = Keuangan::where([
             'id_rt' => $id,
         ])->first();
-        if (!$data){
-            return Response::failure('Data keuangan tidak ditemukan', 404);
-        }
+//        if (!$data){
+//            return Response::failure('Data keuangan tidak ditemukan', 404);
+//        }
         return  Response::success('data keuangan', $data);
     }
 
@@ -26,9 +26,9 @@ class KeuanganController extends Controller
         $data = Pemasukan::where([
             'id_rt' => $id,
         ])->with('kegiatan')->latest()->get();
-        if (!$data){
-            return Response::failure('Data pemasukan tidak ditemukan', 404);
-        }
+//        if (!$data){
+//            return Response::failure('Data pemasukan tidak ditemukan', 404);
+//        }
         return  Response::success('data pemasukan', $data);
     }
 
@@ -36,9 +36,9 @@ class KeuanganController extends Controller
         $data = Pengeluaran::where([
             'id_rt' => $id,
         ])->with('kegiatan')->latest()->get();
-        if (!$data){
-            return Response::failure('Data pemasukan tidak ditemukan', 404);
-        }
+//        if (!$data){
+//            return Response::failure('Data pemasukan tidak ditemukan', 404);
+//        }
         return  Response::success('data pemasukan', $data);
     }
 
