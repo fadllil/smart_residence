@@ -45,8 +45,8 @@
 	</table>
 	<hr style="height:3px;border:none;color:#333;background-color:#333;"><br><br>
 	<center>
-		<u><b>SURAT KETERANGAN BERDOMISILI</b></u><br>
-		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKD/{{ date('m') }}/{{ date('Y') }}
+		<u><b>SURAT KETERANGAN KEMATIAN</b></u><br>
+		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKK/{{ date('m') }}/{{ date('Y') }}
 	</center>
 	<br><br>
 	<p align="justify">
@@ -64,9 +64,9 @@
 				<td>: {{ $data['jenis_kelamin'] }}</td>
 			</tr>
 			<tr><?php 
-			$lahir = explode('-', $data['tanggal_lahir']);
-			$b = (int)$lahir[1] - 1;
-			 ?>
+				$lahir = explode('-', $data['tanggal_lahir']);
+				$b = (int)$lahir[1] - 1;
+				 ?>
 				<td>Tempat/Tgl Lahir</td>
 				<td>: {{ $data['tempat_lahir'].', '.$lahir[0].' '.$bulan[$b].' '.$lahir[2] }}</td>
 			</tr>
@@ -94,22 +94,48 @@
 	</table>
 	<p align="justify">
 		Nama tersebut diatas adalah benar Warga RT {{ $rt->nama }}, RW {{ $rw->nama }} dan berdomisili dilingkungan
-		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}
+		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}, 
+        telah <b>Meninggal Dunia </b>pada :
 	</p>
-	<p>
-		Surat Keterangan ini dipergunakan untuk : 
-		<ol>
-			@if($data['jenis'] == "KK")
-				<li>Pengurusan KK</li>
-			@elseif($data['jenis'] == "KTP")
-				<li>Pengurusan KTP</li>
-			@elseif($data['jenis'] == "SKBB")
-				<li>Pengurusan SKBB</li>
-			@elseif($data['jenis'] == "SKAW")
-				<li>Pengurusan Surat Keterangan Ahli Waris</li>
-			@endif
-		</ol>
-	</p>
+	<table style="margin-left: 50px">
+		<tbody>
+			<tr><?php 
+				$mati = explode('-', $data['tanggal_kematian']);
+				$b = (int)$mati[1] - 1;
+				 ?>
+				<td>Hari/Tanggal</td>
+				<td>: {{ $mati[0].' '.$bulan[$b].' '.$mati[2] }}</td>
+			</tr>
+			<tr>
+				<td>Waktu</td>
+				<td>: {{ $data['waktu_kematian'] }} WIB</td>
+			</tr>
+			<tr>
+				<td>Meniggal Dunia</td>
+				<td>
+                    @if($data['jenis_tempat_kematian'] == 'rs')
+                        : di RS/<strike>Kediamannya</strike>/<strike>lainnya</strike> {{ $data['tempat_kematian'] }}
+                    @elseif($data['jenis_tempat_kematian'] == 'kediamannya')
+                        : di <strike>RS</strike>/Kediamannya/<strike>lainnya</strike> {{ $data['tempat_kematian'] }}
+                    @else
+                        : di <strike>RS</strike>/<strike>Kediamannya</strike>/lainnya {{ $data['tempat_kematian'] }}
+                    @endif
+                </td>
+			</tr>
+			<tr>
+				<td>Dikebumikan di </td>
+				<td>: {{ $data['tempat_dikebumikan'] }}</td>
+			</tr>
+			<tr>
+				<td>Suami/Istri/Kerabat dari</td>
+				<td>: {{ $kerabat->nama }}</td>
+			</tr>
+			<tr>
+				<td>Alamat</td>
+				<td>: {{ $user->warga->alamat }}</td>
+			</tr>
+		</tbody>
+	</table>
 	<p>
 		Demikian Surat Keterangan Domisili ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
 	</p>
@@ -132,7 +158,7 @@
 				</td>
 			</tr>
 			<tr style="height: 300px">
-				<td><br><br><br></td>
+				<td><br><br></td>
 				<td></td>
 				<td></td>
 			</tr>

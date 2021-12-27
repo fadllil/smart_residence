@@ -45,8 +45,8 @@
 	</table>
 	<hr style="height:3px;border:none;color:#333;background-color:#333;"><br><br>
 	<center>
-		<u><b>SURAT KETERANGAN BERDOMISILI</b></u><br>
-		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKD/{{ date('m') }}/{{ date('Y') }}
+		<b>SURAT KETERANGAN</b><br><b><u>KELUARGA TIDAK MAMPU</u></b><br>
+		Nomor:{{ $no }}/{{ $rt->nama }}.{{ $rw->nama }}/SKTM/{{ date('m') }}/{{ date('Y') }}
 	</center>
 	<br><br>
 	<p align="justify">
@@ -64,9 +64,9 @@
 				<td>: {{ $data['jenis_kelamin'] }}</td>
 			</tr>
 			<tr><?php 
-			$lahir = explode('-', $data['tanggal_lahir']);
-			$b = (int)$lahir[1] - 1;
-			 ?>
+				$lahir = explode('-', $data['tanggal_lahir']);
+				$b = (int)$lahir[1] - 1;
+				 ?>
 				<td>Tempat/Tgl Lahir</td>
 				<td>: {{ $data['tempat_lahir'].', '.$lahir[0].' '.$bulan[$b].' '.$lahir[2] }}</td>
 			</tr>
@@ -94,22 +94,10 @@
 	</table>
 	<p align="justify">
 		Nama tersebut diatas adalah benar Warga RT {{ $rt->nama }}, RW {{ $rw->nama }} dan berdomisili dilingkungan
-		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }}
+		RT {{ $rt->nama }}, RW {{ $rw->nama }}, Kelurahan {{ $lurah->nama }}, Kecamatan {{ $kecamatan->nama }}, Kota {{ $kabupaten->nama }},
+        dan yang bersangkutan adalah benar :
 	</p>
-	<p>
-		Surat Keterangan ini dipergunakan untuk : 
-		<ol>
-			@if($data['jenis'] == "KK")
-				<li>Pengurusan KK</li>
-			@elseif($data['jenis'] == "KTP")
-				<li>Pengurusan KTP</li>
-			@elseif($data['jenis'] == "SKBB")
-				<li>Pengurusan SKBB</li>
-			@elseif($data['jenis'] == "SKAW")
-				<li>Pengurusan Surat Keterangan Ahli Waris</li>
-			@endif
-		</ol>
-	</p>
+    <center><b>Keluarga Tidak Mampu / Miskin</b></center><br>
 	<p>
 		Demikian Surat Keterangan Domisili ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
 	</p>
